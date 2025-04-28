@@ -9,6 +9,7 @@ package grupo5.gestion_inventario.model;
  * @author lautaro
  */
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -25,6 +26,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @JsonBackReference                  
     private Client client;
 
     /* getters & setters */

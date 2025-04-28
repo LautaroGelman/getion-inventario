@@ -8,6 +8,7 @@ package grupo5.gestion_inventario.model;
  *
  * @author lautaro
  */
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class Client {
     private String password;   // opcional
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference                
     private List<Product> products;
 
     /* getters & setters */
