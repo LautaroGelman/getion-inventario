@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Super Panel - Comercializa S.A.</title>
+  <link rel="stylesheet" href="./css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="./javascript/dashboard.js" defer></script>
+  
+
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Comercializa S.A.</h2>
+      <nav>
+        <ul>
+          <li><a href="form-cliente.html">Clientes</a></li>
+          <li><a href="#">Subpaneles</a></li>
+          <li><a href="reportes.html">Reportes</a></li>
+          <li><a href="configuracion.html">Configuración</a></li>
+          <li><a href="index.html">Cerrar sesión</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <h1>Bienvenido al Super Panel</h1>
+      </header>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Clientes Activos</h3>
+          <p>24</p>
+        </div>
+        <div class="card">
+          <h3>Ingresos Mensuales</h3>
+          <p>$125.000</p>
+        </div>
+        <div class="card">
+          <h3>Artículos Gestionados</h3>
+          <p>850</p>
+        </div>
+      </section>
+
+      <section class="chart-section">
+        <h2>Estadísticas de uso</h2>
+        <canvas id="statsChart"></canvas>
+      </section>
+      <section class="form-section">
+        <h2>Agregar nuevo producto</h2>
+        <form id="formProducto">
+          <div class="form-group">
+            <input type="text" id="nombre" placeholder="Nombre del producto" required>
+            <input type="text" id="descripcion" placeholder="Descripción" required>
+            <input type="number" id="precio" placeholder="Precio" required>
+            <input type="number" id="stock" placeholder="Stock inicial" required>
+            <input type="number" id="cliente" placeholder="ID del cliente" required>
+            <button type="submit">Guardar Producto</button>
+          </div>
+          <p id="mensaje"></p>
+        </form>
+      </section>
+      
+
+    </main>
+  </div>
+</body>
+</html>

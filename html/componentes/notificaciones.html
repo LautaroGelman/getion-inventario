@@ -1,0 +1,14 @@
+<div id="notificacion" class="alert alert-success" style="display: none;">
+    Operación realizada con éxito.
+  </div>
+  
+  <script>
+    function mostrarNotificacion(mensaje, tipo = "success") {
+      const noti = document.getElementById("notificacion");
+      noti.className = tipo === "success" ? "alert alert-success" : "alert alert-error";
+      noti.textContent = mensaje;
+      noti.style.display = "block";
+      setTimeout(() => noti.style.display = "none", 3000);
+    }
+  </script>
+  
