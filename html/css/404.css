@@ -1,5 +1,8 @@
+@import url('base.css');
+
+/* Layout centrado y mensaje de error */
 body {
-  font-family: Verdana, sans-serif;
+  background-color: var(--secondary-bg); /* o el color que prefieras */
   text-align: center;
   margin-top: 100px;
 }
@@ -8,3 +11,4 @@ h1 {
   font-size: 4em;
   color: #d00;
 }
+

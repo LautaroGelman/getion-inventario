@@ -1,25 +1,23 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 20px;
-}
+@import url('base.css');
 
+/* Contenedor principal */
 .container {
-  background: white;
   max-width: 600px;
   margin: auto;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px var(--shadow);
+  background-color: var(--card-bg);
 }
 
+/* Título de página */
 h1 {
   text-align: center;
   color: #333;
   margin-bottom: 20px;
 }
 
+/* Etiquetas dentro del form */
 form label {
   font-weight: bold;
   margin-top: 15px;
@@ -27,44 +25,17 @@ form label {
   color: #444;
 }
 
-input,
-select {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
+/* Botones con clase específica */
 button.btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
+  /* ya hereda la mayoría de propiedades de base.css */
   padding: 12px 20px;
   border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button.btn:hover {
-  background-color: #0056b3;
 }
 
 a.btn-back {
-  display: inline-block;
-  margin-top: 20px;
-  text-align: center;
+  /* ajustes de color y espaciado */
   background-color: #6c757d;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.95rem;
-  transition: background-color 0.3s ease;
+  margin-top: 20px;
 }
 
 a.btn-back:hover {

@@ -20,5 +20,15 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     } else {
       errorMsg.textContent = "Usuario o contraseña incorrectos.";
     }
+
+    if (username === "cliente1" && password === "1234") {
+      errorMsg.style.color = "green";
+      errorMsg.textContent = "Inicio de sesión exitoso. Redirigiendo...";
+      setTimeout(() => {
+        window.location.href = "panel-cliente.html"; // Página destino
+      }, 1500);
+    } else {
+      errorMsg.textContent = "Usuario o contraseña incorrectos.";
+    }
   });
   
