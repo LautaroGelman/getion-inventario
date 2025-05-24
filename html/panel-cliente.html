@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Cliente</title>
+  <link rel="stylesheet" href="./css/panel.css">
+  <script src="./javascript/panel.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Panel Cliente</h1>
+    <nav>
+      <button data-section="dashboard">Dashboard</button>
+      <button data-section="inventario">Inventario</button>
+      <button data-section="ventas">Ventas</button>
+      <button data-section="configuracion">Configuración</button>
+      <button id="logout-btn">Cerrar sesión</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="dashboard" class="panel-section">
+      <h2>Dashboard Cliente</h2>
+      <p>Indicadores como stock bajo, últimas ventas y movimientos recientes.</p>
+      <!-- Aquí irán tarjetas o listas con datos reales -->
+    </section>
+
+    <section id="inventario" class="panel-section" style="display:none;">
+      <h2>Inventario</h2>
+      <button id="btn-nuevo-articulo">+ Nuevo Artículo</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Stock</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Lista de artículos aquí -->
+        </tbody>
+      </table>
+    </section>
+
+    <section id="ventas" class="panel-section" style="display:none;">
+      <h2>Ventas</h2>
+      <button id="btn-nueva-venta">Registrar Nueva Venta</button>
+      <p>Listado de ventas recientes o formulario embebido para nueva venta.</p>
+    </section>
+
+    <section id="configuracion" class="panel-section" style="display:none;">
+      <h2>Configuración del Negocio</h2>
+      <p>Datos básicos, configuración de impuestos, permisos de empleados.</p>
+    </section>
+  </main>
+
+  <script>
+    const buttons = document.querySelectorAll('nav button[data-section]');
+    const sections = document.querySelectorAll('.panel-section');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const target = button.getAttribute('data-section');
+        sections.forEach(s => {
+          s.style.display = s.id === target ? 'block' : 'none';
+        });
+      });
+    });
+
+    // Logout simple (redireccionar a login)
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

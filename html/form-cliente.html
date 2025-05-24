@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formulario Cliente</title>
+  <link rel="stylesheet" href="css/cliente.css" />
+  <script src="./javascript/cliente.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Registro / Edición de Cliente</h1>
+    <form>
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" name="nombre" required />
+
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="telefono">Teléfono</label>
+      <input type="text" id="telefono" name="telefono" />
+
+      <label for="plan">Plan asignado</label>
+      <select id="plan" name="plan">
+        <option value="basico">Básico</option>
+        <option value="intermedio">Intermedio</option>
+        <option value="premium">Premium</option>
+      </select>
+
+      <label for="estado">Estado</label>
+      <select id="estado" name="estado">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+
+      <button type="submit">Guardar Cliente</button>
+    </form>
+  </div>
+</body>
+</html>

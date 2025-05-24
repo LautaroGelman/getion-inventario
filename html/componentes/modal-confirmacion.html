@@ -1,0 +1,23 @@
+<div id="modalConfirm" class="modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5);">
+    <div style="background: white; margin: 15% auto; padding: 2rem; width: 300px; border-radius: 8px; text-align: center;">
+      <p>¿Estás seguro de realizar esta acción?</p>
+      <button onclick="confirmarAccion()">Confirmar</button>
+      <button onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+  
+  <script>
+    function mostrarModal() {
+      document.getElementById("modalConfirm").style.display = "block";
+    }
+  
+    function cerrarModal() {
+      document.getElementById("modalConfirm").style.display = "none";
+    }
+  
+    function confirmarAccion() {
+      cerrarModal();
+      alert("Acción confirmada.");
+    }
+  </script>
+  
