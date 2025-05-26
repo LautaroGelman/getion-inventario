@@ -1,45 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Formulario Cliente</title>
-  <link rel="stylesheet" href="/css/base.css" />
-  <link rel="stylesheet" href="/css/cliente.css" />
-  <script src="/javascript/cliente.js" defer></script>
-</head>
-<body>
-  <div class="container">
-    <h1>Registro / Edición de Cliente</h1>
-    <form>
-      <label for="nombre">Nombre completo</label>
-      <input type="text" id="nombre" name="nombre" required />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Formulario Cliente</title>
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/cliente.css" />
+    <script src="/javascript/cliente.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <aside class="sidebar">
+        <h2>Super Panel</h2>
+        <nav>
+          <ul>
+            <li><a href="panel-admin.html">Dashboard</a></li>
+            <li><a href="form-cliente.html">Cuentas</a></li>
+            <li><a href="reportes.html">Reportes</a></li>
+            <li><a href="configuracion.html">Configuración</a></li>
+            <li><a href="index.html">Cerrar sesión</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="main-content">
+        <header>
+          <h1>Registro / Edición de Cliente</h1>
+        </header>
+        <form>
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" required />
 
-      <label for="email">Correo electrónico</label>
-      <input type="email" id="email" name="email" required />
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" required />
 
-      <label for="telefono">Teléfono</label>
-      <input type="text" id="telefono" name="telefono" />
+          <label for="telefono">Teléfono</label>
+          <input type="text" id="telefono" name="telefono" />
 
-      <label for="plan">Plan asignado</label>
-      <select id="plan" name="plan">
-        <option value="basico">Básico</option>
-        <option value="intermedio">Intermedio</option>
-        <option value="premium">Premium</option>
-      </select>
+          <label for="plan">Plan asignado</label>
+          <select id="plan" name="plan">
+            <option value="basico">Básico</option>
+            <option value="intermedio">Intermedio</option>
+            <option value="premium">Premium</option>
+          </select>
 
-      <label for="estado">Estado</label>
-      <select id="estado" name="estado">
-        <option value="activo">Activo</option>
-        <option value="inactivo">Inactivo</option>
-      </select>
+          <label for="estado">Estado</label>
+          <select id="estado" name="estado">
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
 
-      <button type="submit">Guardar Cliente</button>
-      
-      // Botón para enviar el formulario
-      <form action="http://localhost:8080/api/clientes" method="post">
+          <button type="submit">Guardar Cliente</button>
 
-    </form>
-  </div>
-</body>
-</html>
+          <form action="http://localhost:8080/api/clientes" method="post">
+          </form>
+        </main>
+      </div>
+    </body>
+  </html>

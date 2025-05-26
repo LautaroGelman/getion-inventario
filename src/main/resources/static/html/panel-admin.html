@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/base.css" />
     <link rel="stylesheet" href="../css/dashboard.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-    <script src="../javascript/admin.js" defer></script>
+    <script src="../javascript/dashboard.js" defer></script>
   </head>
   <body>
     <div class="container">
@@ -16,7 +16,7 @@
         <nav>
           <ul>
             <li><a href="panel-admin.html">Dashboard</a></li>
-            <li><a href="manage-accounts.html">Cuentas</a></li>
+            <li><a href="form-cliente.html">Cuentas</a></li>
             <li><a href="reportes.html">Reportes</a></li>
             <li><a href="configuracion.html">Configuración</a></li>
             <li><a href="index.html">Cerrar sesión</a></li>
@@ -40,20 +40,6 @@
         <section class="chart-section">
           <h2>Resumen de ingresos 30d</h2>
           <canvas id="revenueChart"></canvas>
-        </section>
-        <section class="form-section">
-          <h2>Agregar Nuevo Producto</h2>
-          <form id="formProducto">
-            <input type="text" id="code" placeholder="Código" required />
-            <input type="text" id="name" placeholder="Nombre" required />
-            <input type="text" id="description" placeholder="Descripción" />
-            <input type="number" id="price" placeholder="Precio" required />
-            <input type="number" id="stock" placeholder="Stock" required />
-            <input type="number" id="clientId" placeholder="ID Cliente"
-              required />
-            <button type="submit">Guardar</button>
-            <p id="mensaje"></p>
-          </form>
         </section>
       </main>
     </div>
