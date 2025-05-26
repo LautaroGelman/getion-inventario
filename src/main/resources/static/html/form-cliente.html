@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Formulario Cliente</title>
-  <link rel="stylesheet" href="css/cliente.css" />
-  <script src="./javascript/cliente.js" defer></script>
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/cliente.css" />
+  <script src="/javascript/cliente.js" defer></script>
 </head>
 <body>
   <div class="container">
@@ -34,6 +35,10 @@
       </select>
 
       <button type="submit">Guardar Cliente</button>
+      
+      // Botón para enviar el formulario
+      <form action="http://localhost:8080/api/clientes" method="post">
+
     </form>
   </div>
 </body>

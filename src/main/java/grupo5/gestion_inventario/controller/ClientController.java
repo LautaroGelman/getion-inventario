@@ -1,42 +1,35 @@
 package grupo5.gestion_inventario.controller;
 
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
 import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.service.ClientService;
+import grupo5.gestion_inventario.repository.ClientRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controlador para gestionar información del cliente autenticado.
+ */
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
 
-    private final ClientService service;
+    private final ClientRepository clientRepo;
 
-    public ClientController(ClientService service) {
-        this.service = service;
+    public ClientController(ClientRepository clientRepo) {
+        this.clientRepo = clientRepo;
     }
 
-    @PostMapping
-    public Client create(@RequestBody Client c) {
-        return service.create(c);
+    /**
+     * Devuelve los datos del cliente actualmente autenticado.
+     * Endpoint: GET /clients/me
+     */
+    @GetMapping("/me")
+    public ResponseEntity<Client> me(Authentication auth) {
+        String email = auth.getName();
+        Client client = clientRepo.findByEmail(email);
+        return ResponseEntity.ok(client);
     }
 
-    @GetMapping
-    public List<Client> list() {
-        return service.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Client get(@PathVariable Long id) {
-        return service.findById(id);
-    }
-
-    @PutMapping("/{id}")
-    public Client update(@PathVariable Long id, @RequestBody Client c) {
-        return service.update(id, c);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
-    }
 }

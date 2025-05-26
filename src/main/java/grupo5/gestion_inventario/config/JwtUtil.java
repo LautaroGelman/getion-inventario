@@ -1,4 +1,3 @@
-// src/main/java/grupo5/gestion_inventario/config/JwtUtil.java
 package grupo5.gestion_inventario.config;
 
 import io.jsonwebtoken.*;
@@ -8,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -22,21 +23,39 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String username) {
+    /**
+     * Genera un JWT incluyendo username y roles.
+     */
+    public String generateToken(String username, List<String> roles) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + expirationMs);
         return Jwts.builder()
                 .setSubject(username)
+                .addClaims(Map.of("roles", roles))
                 .setIssuedAt(now)
                 .setExpiration(exp)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    /**
+     * Extrae el username (subject) del token.
+     */
     public String extractUsername(String token) {
         return parseClaims(token).getSubject();
     }
 
+    /**
+     * Extrae los roles almacenados en el token.
+     */
+    @SuppressWarnings("unchecked")
+    public List<String> extractRoles(String token) {
+        return (List<String>) parseClaims(token).get("roles");
+    }
+
+    /**
+     * Valida la firma y expiración del token.
+     */
     public boolean validateToken(String token) {
         try {
             parseClaims(token);
@@ -54,3 +73,4 @@ public class JwtUtil {
                 .getBody();
     }
 }
+

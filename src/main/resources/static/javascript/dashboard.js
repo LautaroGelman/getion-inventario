@@ -1,4 +1,4 @@
-// 1) CÓDIGO DEL GRÁFICO  (lo que ya tenías)
+
 const ctx = document.getElementById('statsChart').getContext('2d');
 const statsChart = new Chart(ctx, {
   type: 'bar',
@@ -13,7 +13,7 @@ const statsChart = new Chart(ctx, {
   options: { responsive: true, scales: { y: { beginAtZero: true } } }
 });
 
-// 2) LÓGICA DEL FORMULARIO  (el bloque que te pasé)
+
 document.addEventListener('DOMContentLoaded', () => {
   const form    = document.getElementById('formProducto');
   const mensaje = document.getElementById('mensaje');

@@ -1,0 +1,43 @@
+@import url('base.css');
+
+/* Contenedor principal */
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px var(--shadow);
+  background-color: var(--card-bg);
+}
+
+/* Título de página */
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Etiquetas dentro del form */
+form label {
+  font-weight: bold;
+  margin-top: 15px;
+  display: block;
+  color: #444;
+}
+
+/* Botones con clase específica */
+button.btn {
+  /* ya hereda la mayoría de propiedades de base.css */
+  padding: 12px 20px;
+  border-radius: 6px;
+}
+
+a.btn-back {
+  /* ajustes de color y espaciado */
+  background-color: #6c757d;
+  margin-top: 20px;
+}
+
+a.btn-back:hover {
+  background-color: #5a6268;
+}
