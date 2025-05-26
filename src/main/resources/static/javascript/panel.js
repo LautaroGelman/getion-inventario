@@ -17,3 +17,18 @@ const buttons = document.querySelectorAll('nav button[data-section]');
     document.getElementById('logout-btn').addEventListener('click', () => {
       window.location.href = 'index.html';
     });
+
+
+const nuevaVentaBtn = document.getElementById("btn-nueva-venta");
+
+
+nuevaVentaBtn.addEventListener("click", () => {
+
+    window.location.href = "form-venta.html";
+});
+
+const nuevoArticuloBtn = document.getElementById("btn-nuevo-articulo");
+
+nuevoArticuloBtn.addEventListener("click", () => {
+    window.location.href = "form-articulo.html";
+});
