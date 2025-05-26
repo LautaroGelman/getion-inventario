@@ -5,41 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel - Super Panel</title>
     <link rel="stylesheet" href="../css/base.css" />
-    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/panel.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-    <script src="../javascript/dashboard.js" defer></script>
+    <script src="../javascript/panel.js" defer></script>
   </head>
   <body>
     <div class="container">
       <aside class="sidebar">
         <h2>Super Panel</h2>
         <nav>
-          <ul>
-            <li><a href="panel-admin.html">Dashboard</a></li>
-            <li><a href="form-cliente.html">Cuentas</a></li>
-            <li><a href="reportes.html">Reportes</a></li>
-            <li><a href="configuracion.html">Configuración</a></li>
-            <li><a href="index.html">Cerrar sesión</a></li>
-          </ul>
+            <button data-section="dashboard">Dashboard</button>
+            <button data-section="cuentas">Cuentas</button>
+            <button id="logout-btn">Cerrar sesión</button>
         </nav>
       </aside>
       <main class="main-content">
-        <header>
-          <h1>Bienvenido, Admin</h1>
-        </header>
-        <section class="cards">
-          <div class="card"><h3>Total Cuentas</h3><p
-              id="totalAccounts">—</p></div>
-          <div class="card"><h3>Cuentas FREE</h3><p
-              id="freeTrialAccounts">—</p></div>
-          <div class="card"><h3>Cuentas STANDARD</h3><p
-              id="standardAccounts">—</p></div>
-          <div class="card"><h3>Cuentas PREMIUM</h3><p
-              id="premiumAccounts">—</p></div>
+        <section id="dashboard" class="panel-section">
+          <header>
+            <h1>Bienvenido, Admin</h1>
+          </header>
+          <section class="cards">
+            <div class="card"><h3>Total Cuentas</h3><p
+                    id="totalAccounts">—</p></div>
+            <div class="card"><h3>Cuentas FREE</h3><p
+                    id="freeTrialAccounts">—</p></div>
+            <div class="card"><h3>Cuentas STANDARD</h3><p
+                    id="standardAccounts">—</p></div>
+            <div class="card"><h3>Cuentas PREMIUM</h3><p
+                    id="premiumAccounts">—</p></div>
+          </section>
+          <section class="chart-section">
+            <h2>Resumen de ingresos 30d</h2>
+            <canvas id="revenueChart"></canvas>
+          </section>
         </section>
-        <section class="chart-section">
-          <h2>Resumen de ingresos 30d</h2>
-          <canvas id="revenueChart"></canvas>
+        <section id="cuentas" class="panel-section">
+          <h2>Cuentas</h2>
+          <button id="btn-nueva-cuenta">Nueva Cuenta</button>
+          <table>
+            <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Plan</th>
+              <th>Estado</th>
+            </tr>
+            </thead>
+          </table>
         </section>
       </main>
     </div>

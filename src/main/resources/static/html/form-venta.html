@@ -9,10 +9,11 @@
     <script src="../javascript/ventas.js" defer></script>
   </head>
   <body>
-    <header>
-      <h1>Registrar Nueva Venta</h1>
-    </header>
+  <div class="container">
     <main>
+      <header>
+        <h1>Registrar Nueva Venta</h1>
+      </header>
       <form id="form-venta">
         <div>
           <label for="cliente">Cliente:</label>
@@ -38,13 +39,15 @@
             <option value="transferencia">Transferencia</option>
           </select>
         </div>
+        <label for="date">Fecha:</label>
         <input type="date" id="date" required>
         <div>
           <button type="submit">Registrar Venta</button>
           <button type="button"
-            onclick="window.history.back()">Cancelar</button>
+                  onclick="window.history.back()">Cancelar</button>
         </div>
       </form>
     </main>
+  </div>
   </body>
 </html>

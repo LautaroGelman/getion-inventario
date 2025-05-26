@@ -21,9 +21,7 @@ const buttons = document.querySelectorAll('nav button[data-section]');
 
 const nuevaVentaBtn = document.getElementById("btn-nueva-venta");
 
-
 nuevaVentaBtn.addEventListener("click", () => {
-
     window.location.href = "form-venta.html";
 });
 
@@ -31,4 +29,10 @@ const nuevoArticuloBtn = document.getElementById("btn-nuevo-articulo");
 
 nuevoArticuloBtn.addEventListener("click", () => {
     window.location.href = "form-articulo.html";
+});
+
+const nuevaCuentaBtn = document.getElementById("btn-nueva-cuenta");
+
+nuevaCuentaBtn.addEventListener("click", () => {
+    window.location.href = "form-cliente.html";
 });
