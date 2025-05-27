@@ -2,7 +2,7 @@
 
 /* Login container */
 body {
-  background: linear-gradient(135deg, var(--primary), #00c6ff);
+  background: linear-gradient(135deg, var(--primary), #f8faf8);
   height: 100vh;
   display: flex;
   align-items: center;
@@ -22,6 +22,7 @@ body {
 .login-container h2 {
   margin-bottom: 1.5rem;
   color: var(--primary);
+  margin-left: auto;
 }
 
 .input-group {

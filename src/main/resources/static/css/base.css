@@ -1,11 +1,11 @@
 /* 1. Variables de color y tipografía */
 :root {
-  --primary: #007bff;
+  --primary: #0480a3;
   --primary-dark: #0056b3;
-  --secondary-bg: #f4f6fb;
-  --card-bg: #fff;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --font-base: 'Segoe UI', sans-serif;
+  --secondary-bg: rgba(248, 250, 248, 0.02);
+  --card-bg: #eff8f8;
+  --shadow: rgb(4, 128, 163);
+  --font-base: 'Segoe UI', 'sans-serif'
 }
 
 /* 2. Reset y base */
@@ -13,18 +13,19 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+
 }
 
 body {
   font-family: var(--font-base);
-  background-color: var(--secondary-bg);
+  background: linear-gradient(135deg, var(--primary), #f8faf8);
 }
 
 /* 3. Formularios e inputs */
 form {
   max-width: 600px;
   margin: 2rem auto;
-  background: var(--card-bg);
+  background: #eff8f8;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px var(--shadow);
@@ -57,8 +58,8 @@ button:hover, .btn:hover, a.btn-back:hover {
 }
 
 /* 5. Tarjetas y secciones */
-.panel-section, .card, .config-card {
-  background-color: var(--card-bg);
+.panel-section, /*.card*/ .config-card {
+  background-color: #f4fbfb;
   padding: 1.5rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px var(--shadow);
@@ -81,7 +82,15 @@ th {
 }
 
 /* 7. Títulos */
-h1, h2, h3 {
+h1, h3 {
   color: #333;
   margin-bottom: 1rem;
+}
+
+h2{
+  margin-left:45%;
+  margin-top:1.5%;
+  text-decoration-color: black;
+  font-size: 40px;
+
 }

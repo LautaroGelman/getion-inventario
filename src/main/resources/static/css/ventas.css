@@ -13,3 +13,22 @@ table {
 td, th {
   padding: 8px;
 }
+
+main {
+  padding: 40px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px var(--shadow);
+  background-color: var(--card-bg);
+}
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
