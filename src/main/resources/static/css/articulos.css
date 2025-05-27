@@ -1,0 +1,7 @@
+@import url('base.css');
+
+/* Fondo de página específico */
+body {
+  background-color: var(--primary);
+}
+

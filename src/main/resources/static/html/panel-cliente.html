@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Cliente</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/panel.css" />
+
+  <!-- Lógica del panel -->
+  <script src="../javascript/cliente.js" defer></script>
+</head>
+
+<body>
+<header>
+  <h1>Panel Cliente</h1>
+  <nav>
+    <button data-section="dashboard">Dashboard</button>
+    <button data-section="inventario">Inventario</button>
+    <button data-section="ventas">Ventas</button>
+    <button id="logout-btn">Cerrar sesión</button>
+  </nav>
+</header>
+
+<main>
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="panel-section">
+    <h2>Dashboard Cliente</h2>
+    <p>
+      Indicadores como stock bajo, últimas ventas y movimientos recientes.
+    </p>
+    <div id="dash-cards"><!-- tarjetas dinámicas --></div>
+  </section>
+
+  <!-- INVENTARIO -->
+  <section id="inventario" class="panel-section" style="display:none;">
+    <h2>Inventario</h2>
+    <button id="btn-nuevo-articulo">Nuevo artículo</button>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Stock</th>
+        <th>Precio</th>
+      </tr>
+      </thead>
+      <tbody id="inv-body"><!-- filas dinámicas --></tbody>
+    </table>
+  </section>
+
+  <!-- VENTAS -->
+  <section id="ventas" class="panel-section" style="display:none;">
+    <h2>Ventas</h2>
+    <button id="btn-nueva-venta">Registrar nueva venta</button>
+
+    <table>
+      <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Artículo</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Método de pago</th>
+        <th>Fecha</th>
+      </tr>
+      </thead>
+      <tbody id="ventas-body"><!-- filas dinámicas --></tbody>
+    </table>
+  </section>
+</main>
+</body>
+</html>

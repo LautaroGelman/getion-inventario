@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Super Panel</title>
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/panel.css" />
+  <script src="../javascript/panel.js" defer></script>
+</head>
+<body>
+<div class="container">
+  <aside class="sidebar">
+    <h2>Super Panel</h2>
+    <nav>
+      <button data-section="dashboard">Dashboard</button>
+      <button data-section="cuentas">Cuentas</button>
+      <button id="logout-btn">Cerrar sesión</button>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <!-- ── Dashboard ── -->
+    <section id="dashboard" class="panel-section">
+      <header>
+        <h1>Bienvenido, Admin</h1>
+      </header>
+      <section class="cards">
+        <div class="card">
+          <h3>Total Cuentas</h3>
+          <p id="totalAccounts">—</p>
+        </div>
+        <div class="card">
+          <h3>Cuentas BÁSICO</h3>
+          <p id="freeTrialAccounts">—</p>
+        </div>
+        <div class="card">
+          <h3>Cuentas INTERMEDIO</h3>
+          <p id="standardAccounts">—</p>
+        </div>
+        <div class="card">
+          <h3>Cuentas PREMIUM</h3>
+          <p id="premiumAccounts">—</p>
+        </div>
+      </section>
+    </section>
+
+    <!-- ── Cuentas ── -->
+    <section id="cuentas" class="panel-section" style="display:none;">
+      <h2>Cuentas</h2>
+      <button
+              id="btn-nueva-cuenta"
+              onclick="window.location.href='form-cliente.html'"
+      >
+        Nueva Cuenta
+      </button>
+      <table>
+        <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Plan</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+        </thead>
+        <tbody id="accountsTableBody">
+        <!-- Aquí panel.js inyectará las filas de las cuentas -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+</body>
+</html>

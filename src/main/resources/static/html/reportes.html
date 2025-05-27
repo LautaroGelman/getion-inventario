@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Reportes</title>
+    <link rel="stylesheet" href="../css/base.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <h2>Super Panel</h2>
+      <nav>
+        <ul>
+          <li><a href="panel-admin.html">Dashboard</a></li>
+          <li><a href="form-cliente.html">Cuentas</a></li>
+          <li><a href="reportes.html">Reportes</a></li>
+          <li><a href="configuracion.html">Configuración</a></li>
+          <li><a href="index.html">Cerrar sesión</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <header class="navbar">
+      <h1>Reportes del Sistema</h1>
+    </header>
+
+    <div class="container">
+      <!-- Filtros -->
+      <section>
+        <form id="form-filtros">
+          <label for="tipoReporte">Tipo de reporte:</label>
+          <select id="tipoReporte" name="tipoReporte">
+            <option value="clientes">Clientes</option>
+            <option value="ingresos">Ingresos</option>
+            <option value="ventas">Ventas</option>
+            <option value="stock">Stock</option>
+          </select>
+
+          <label for="fechaInicio">Fecha inicio:</label>
+          <input type="date" id="fechaInicio" name="fechaInicio" />
+
+          <label for="fechaFin">Fecha fin:</label>
+          <input type="date" id="fechaFin" name="fechaFin" />
+
+          <button type="submit">Filtrar</button>
+        </form>
+      </section>
+
+      <!-- Tabla de reportes -->
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descripción</th>
+              <th>Fecha</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se llenarán dinámicamente los datos -->
+            <tr>
+              <td>1</td>
+              <td>Clientes activos</td>
+              <td>2025-05-01</td>
+              <td>150</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Ingresos totales</td>
+              <td>2025-05-01</td>
+              <td>$12,000</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Ventas del día</td>
+              <td>2025-05-18</td>
+              <td>75</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </body>
+</html>

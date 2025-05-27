@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario Gasto</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <script src="../javascript/form-gastos.js" defer></script>
+</head>
+<body>
+  <h1>Gasto</h1>
+  <form id="formGasto">
+    <input type="text" id="description" placeholder="Descripción" required>
+    <input type="number" id="amount" placeholder="Monto" required>
+    <select id="type" required>
+      <option value="FIJO">FIJO</option>
+      <option value="VARIABLE">VARIABLE</option>
+    </select>
+    <input type="date" id="date" required>
+    <button type="submit">Guardar</button>
+  </form>
+</body>
+</html>

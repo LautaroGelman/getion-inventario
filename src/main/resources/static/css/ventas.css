@@ -1,0 +1,15 @@
+@import url('base.css');
+
+/* Fondo específico */
+body {
+  background-color: var(--primary);
+}
+
+/* Tabla de ventas */
+table {
+  /* ya hereda border-collapse y márgenes de base.css */
+}
+
+td, th {
+  padding: 8px;
+}
