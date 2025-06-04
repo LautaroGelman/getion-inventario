@@ -1,0 +1,356 @@
+@import url('base.css');
+
+/* ─── Estilo Global ─────────────────────────────────────────────────────────── */
+
+/* Reset básico para márgenes y cajas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fuente y color base */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #333333;
+    line-height: 1.6;
+}
+
+/* Enlaces y botones básicos */
+button,
+a {
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────────────── */
+
+header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Título principal */
+header h1 {
+    font-size: 1.8rem;
+    color: #0480a3;
+    font-weight: 600;
+}
+
+/* Navegación dentro del header */
+header nav {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+}
+
+/* Botones de sección */
+header nav button {
+    background-color: transparent;
+    border: none;
+    color: #555555;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header nav button:hover {
+    background-color: rgba(4, 128, 163, 0.1);
+    color: #0480a3;
+}
+
+/* Botón Cerrar sesión en header */
+#logout-btn {
+    background-color: #e74c3c;
+    color: #ffffff;
+    border: none;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#logout-btn:hover {
+    background-color: #c0392b;
+}
+
+#logout-btn:active {
+    transform: translateY(1px);
+}
+
+/* ─── Contenido Principal ───────────────────────────────────────────────────── */
+
+main {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Cada sección (Dashboard, Inventario, Ventas) */
+.panel-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 30px 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Títulos de sección */
+.panel-section h2 {
+    font-size: 1.5rem;
+    color: #0480a3;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* ─── Dashboard Cliente ────────────────────────────────────────────────────── */
+
+/* Texto descriptivo */
+#dashboard p {
+    font-size: 1rem;
+    color: #555555;
+    margin-bottom: 25px;
+}
+
+/* Contenedor flexible para tarjetas dinámicas */
+#dash-cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Ejemplo de tarjeta para métricas (puedes clonar esta clase para JS) */
+.dash-card {
+    background-color: #f9fdff;
+    border-left: 4px solid #0480a3;
+    border-radius: 6px;
+    padding: 20px;
+    min-width: 200px;
+    flex: 1 1 calc(25% - 20px);
+    box-shadow: 0 1px 4px rgba(4, 128, 163, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.dash-card:hover {
+    transform: translateY(-4px);
+}
+
+.dash-card h3 {
+    font-size: 1.1rem;
+    color: #333333;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.dash-card p {
+    font-size: 1.6rem;
+    color: #0480a3;
+    font-weight: 600;
+}
+
+/* ─── Inventario ──────────────────────────────────────────────────────────── */
+
+/* Botón de Nuevo artículo */
+#btn-nuevo-articulo {
+    background-color: #0480a3;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#btn-nuevo-articulo:hover {
+    background-color: #036d8b;
+}
+
+#btn-nuevo-articulo:active {
+    transform: translateY(1px);
+}
+
+/* Estilo de tabla */
+#inventario table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+#inventario th,
+#inventario td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #555555;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#inventario th {
+    background-color: #0480a3;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+#inventario tr:hover {
+    background-color: #f4f9fb;
+}
+
+#inventario tr:last-child td {
+    border-bottom: none;
+}
+
+/* ─── Ventas ──────────────────────────────────────────────────────────────── */
+
+/* Botón de Registrar nueva venta */
+#btn-nueva-venta {
+    background-color: #0480a3;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#btn-nueva-venta:hover {
+    background-color: #036d8b;
+}
+
+#btn-nueva-venta:active {
+    transform: translateY(1px);
+}
+
+/* Estilo de tabla ventas */
+#ventas table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+#ventas th,
+#ventas td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #555555;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#ventas th {
+    background-color: #0480a3;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+#ventas tr:hover {
+    background-color: #f4f9fb;
+}
+
+#ventas tr:last-child td {
+    border-bottom: none;
+}
+
+/* ─── Adaptabilidad para Dispositivos Móviles ───────────────────────────────── */
+
+@media (max-width: 992px) {
+    /* Ajustar padding del header y main */
+    header {
+        padding: 15px 20px;
+    }
+
+    main {
+        padding: 30px 20px;
+    }
+
+    /* Botones nav más compactos */
+    header nav button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Layout vertical para header */
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    header nav {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Tarjetas Dashboard en una columna */
+    #dash-cards {
+        flex-direction: column;
+    }
+
+    .dash-card {
+        flex: 1 1 100%;
+    }
+
+    /* Tablas de Inventario y Ventas adaptables */
+    #inventario table,
+    #ventas table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustar tamaño de fuente de títulos */
+    .panel-section h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Botones más pequeños */
+    #btn-nuevo-articulo,
+    #btn-nueva-venta {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+
+    /* ─── Contenedor para el gráfico ───────────────────────────────────────────── */
+    .chart-wrapper {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 40px;
+    }
+
+    /* Forzar ancho completo y un alto mínimo razonable */
+    #ventasChart {
+        width: 100% !important;
+        height: 400px !important;
+    }
+
+}

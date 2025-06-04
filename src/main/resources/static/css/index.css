@@ -1,0 +1,141 @@
+@import url('base.css');
+
+/* ─── Estilo Global y Fondo ─────────────────────────────────────────────────── */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(
+            135deg,
+            rgba(4, 128, 163, 0.8) 0%,
+            rgba(236, 248, 250, 0.9) 100%
+    );
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─── Contenedor Principal ─────────────────────────────────────────────────── */
+
+.login-container {
+    background-color: #ebf7f9;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(4, 128, 163, 0.2);
+    padding: 40px 32px;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+}
+
+/* Título “Comercializa S.A.” */
+.login-container h2 {
+    margin: 0 0 24px;
+    font-size: 1.8rem;
+    color: #0480a3;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* ─── Formulario (Caja Interna) ────────────────────────────────────────────── */
+
+#loginForm {
+    background-color: #f2fcfd;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(4, 128, 163, 0.15);
+    padding: 24px 20px;
+}
+
+/* Agrupación de cada campo */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Labels */
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    color: #333333;
+    font-weight: 600;
+}
+
+/* Campos de entrada */
+.input-group input[type="text"],
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 1px solid #cfdfe3;
+    border-radius: 6px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="password"]:focus {
+    outline: none;
+    border-color: #0480a3;
+    box-shadow: 0 0 6px rgba(4, 128, 163, 0.25);
+    background-color: #fdfcff;
+}
+
+/* Botón Iniciar Sesión */
+#loginForm button[type="submit"] {
+    background-color: #046b8f;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 0;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    margin-top: 10px;
+}
+
+#loginForm button[type="submit"]:hover {
+    background-color: #0480a3;
+}
+
+#loginForm button[type="submit"]:active {
+    transform: translateY(1px);
+}
+
+/* Mensaje de error */
+#error-message {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    color: #d32f2f;
+    min-height: 1.2em; /* Reserva espacio aunque esté vacío */
+}
+
+/* ─── Adaptabilidad para Móviles ────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 32px 16px;
+    }
+
+    .login-container h2 {
+        font-size: 1.6rem;
+    }
+
+    #loginForm {
+        padding: 20px 16px;
+    }
+
+    .input-group input[type="text"],
+    .input-group input[type="password"] {
+        font-size: 0.95rem;
+        padding: 8px 10px;
+    }
+
+    #loginForm button[type="submit"] {
+        font-size: 0.95rem;
+        padding: 10px 0;
+    }
+}

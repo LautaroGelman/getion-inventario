@@ -3,44 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Formulario de Venta</title>
+  <title>Registrar Nueva Venta</title>
+  <!-- Estilos base compartidos -->
   <link rel="stylesheet" href="../css/base.css" />
+  <!-- Estilos específicos para ventas -->
   <link rel="stylesheet" href="../css/ventas.css" />
   <script src="../javascript/ventas.js" defer></script>
 </head>
 <body>
-<div class="container">
+<!-- Contenedor que centra vertical y horizontalmente -->
+<div class="container-form">
+  <header class="form-header">
+    <h1>Registrar Nueva Venta</h1>
+  </header>
   <main>
-    <header>
-      <h1>Registrar Nueva Venta</h1>
-    </header>
     <form id="form-venta">
-      <div>
+      <div class="form-group">
         <label for="articulo">Artículo:</label>
         <select id="articulo" name="articulo" required>
-          <option value>Seleccione...</option>
-          <!-- Opciones dinámicas aquí -->
+          <option value="">Seleccione...</option>
+          <!-- Opciones dinámicas cargadas desde ventas.js -->
         </select>
       </div>
-      <div>
+
+      <div class="form-group">
         <label for="cantidad">Cantidad:</label>
         <input type="number" id="cantidad" name="cantidad" min="1" required />
       </div>
-      <div>
+
+      <div class="form-group">
         <label for="metodo-pago">Método de Pago:</label>
         <select id="metodo-pago" name="metodo-pago" required>
-          <option value>Seleccione...</option>
+          <option value="">Seleccione...</option>
           <option value="efectivo">Efectivo</option>
           <option value="tarjeta">Tarjeta</option>
           <option value="transferencia">Transferencia</option>
         </select>
       </div>
-      <label for="date">Fecha:</label>
-      <input type="date" id="date" required>
-      <div>
-        <button type="submit">Registrar Venta</button>
-        <button type="button"
-                onclick="window.history.back()">Cancelar</button>
+
+      <div class="form-group">
+        <label for="date">Fecha:</label>
+        <input type="date" id="date" name="date" required />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">Registrar Venta</button>
+        <button type="button" class="btn-cancel" onclick="window.history.back()">Cancelar</button>
       </div>
     </form>
   </main>

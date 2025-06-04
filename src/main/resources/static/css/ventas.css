@@ -1,15 +1,159 @@
 @import url('base.css');
 
-/* Fondo específico */
-body {
-  background-color: var(--primary);
+/* ─── Diseño General ───────────────────────────────────────────────────────── */
+
+/* Contenedor principal para centrar el contenido */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+  padding: 40px 20px;
 }
 
-/* Tabla de ventas */
-table {
-  /* ya hereda border-collapse y márgenes de base.css */
+/* Main: limita ancho y aplica margen interno */
+main {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 600px;
+  padding: 30px 40px;
 }
 
-td, th {
-  padding: 8px;
+/* Header interno */
+header {
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #0480a3;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ─── Formulario ───────────────────────────────────────────────────────────── */
+
+/* Agrupa cada campo con espacio */
+#form-venta {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Cada div agrupa un label + control */
+#form-venta > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiquetas */
+#form-venta label {
+  font-size: 1rem;
+  color: #555555;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* Inputs y Selects comparten estilo */
+#form-venta input[type="number"],
+#form-venta input[type="date"],
+#form-venta select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#form-venta input[type="number"]:focus,
+#form-venta input[type="date"]:focus,
+#form-venta select:focus {
+  outline: none;
+  border-color: #0480a3;
+  box-shadow: 0 0 4px rgba(4, 128, 163, 0.3);
+  background-color: #ffffff;
+}
+
+/* Botones de acción (Registrar / Cancelar) */
+#form-venta button {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+/* Botón Registrar Venta */
+#form-venta button[type="submit"] {
+  background-color: #0480a3;
+  color: #ffffff;
+  margin-right: 10px;
+}
+
+#form-venta button[type="submit"]:hover {
+  background-color: #036d8b;
+}
+
+#form-venta button[type="submit"]:active {
+  transform: translateY(1px);
+}
+
+/* Botón Cancelar */
+#form-venta button[type="button"] {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+#form-venta button[type="button"]:hover {
+  background-color: #c0392b;
+}
+
+#form-venta button[type="button"]:active {
+  transform: translateY(1px);
+}
+
+/* Acomoda botones en línea para pantallas grandes */
+#form-venta div:last-child {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* ─── Adaptabilidad para Dispositivos Móviles ───────────────────────────────── */
+
+@media (max-width: 768px) {
+  main {
+    padding: 20px;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  #form-venta {
+    gap: 16px;
+  }
+
+  #form-venta button {
+    width: 100%;
+  }
+
+  #form-venta div:last-child {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #form-venta div:last-child button {
+    margin-right: 0;
+  }
 }

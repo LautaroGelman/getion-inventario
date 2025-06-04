@@ -10,9 +10,9 @@ function authHeaders() {
   const csrf = getCookie("XSRF-TOKEN");
   const jwt  = localStorage.getItem("jwt");
   return {
-    "Content-Type":   "application/json",
-    "X-XSRF-TOKEN":   csrf,
-    "Authorization":  `Bearer ${jwt}`
+    "Content-Type":  "application/json",
+    "X-XSRF-TOKEN":  csrf,
+    "Authorization": `Bearer ${jwt}`
   };
 }
 
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("logout-btn")
       .addEventListener("click", () => {
         localStorage.removeItem("jwt");
-        window.location.href = "../login.html";
+        window.location.href = "index.html";
       });
 
   /* botón Nuevo Artículo */
@@ -87,6 +87,11 @@ function showSection(id) {
       }
       break;
     case "dashboard":
+      if (!showSection.dashLoaded) {
+        loadDashboard();
+        initChart();         // inicializa el gráfico en dashboard
+        showSection.dashLoaded = true;
+      }
       break;
   }
 
@@ -119,6 +124,130 @@ async function loadDashboard() {
   }
 }
 
+/* ──────────────── Gráfico de Ventas (Chart.js) ──────────────── */
+let ventasChartInstance;
+
+function initChart() {
+  const ctx = document.getElementById('ventasChart').getContext('2d');
+  ventasChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: 'Cantidad de Ventas',
+          data: [],
+          yAxisID: 'yVentas',
+          type: 'bar',
+          backgroundColor: 'rgba(4,128,163,0.5)',
+          borderColor: 'rgba(4,128,163,1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Importe Total ($)',
+          data: [],
+          yAxisID: 'yImporte',
+          type: 'line',
+          tension: 0.3,
+          backgroundColor: 'rgba(75,192,192,0.3)',
+          borderColor: 'rgba(75,192,192,1)',
+          borderWidth: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      stacked: false,
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Fecha'
+          },
+          ticks: {
+            autoSkip: true,
+            maxTicksLimit: 10
+          }
+        },
+        yVentas: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: 'Cantidad de Ventas'
+          },
+          beginAtZero: true
+        },
+        yImporte: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: {
+            display: true,
+            text: 'Importe Total ($)'
+          },
+          beginAtZero: true,
+          grid: {
+            drawOnChartArea: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let label = context.dataset.label || '';
+              if (context.dataset.yAxisID === 'yImporte') {
+                return label + ': $' + context.formattedValue;
+              }
+              return label + ': ' + context.formattedValue;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Carga inicial y refresco cada 15 segundos
+  loadChartData();
+  setInterval(loadChartData, 15000);
+}
+
+async function loadChartData() {
+  try {
+    // Ajustamos la ruta al endpoint que existe en tu backend:
+    const clientId = localStorage.getItem("clientId");
+    if (!clientId) {
+      console.error("No se encontró clientId en localStorage");
+      return;
+    }
+    const URL = `/clients/${clientId}/sales/summary?days=30`;
+
+    const data = await fetchJson(URL, { headers: authHeaders() });
+
+    // mapeamos fechas, conteo e importe
+    const labels       = data.map(o => o.date);
+    const ventasData   = data.map(o => o.salesCount);
+    const importeData  = data.map(o => o.totalAmount);
+
+    ventasChartInstance.data.labels               = labels;
+    ventasChartInstance.data.datasets[0].data     = ventasData;
+    ventasChartInstance.data.datasets[1].data     = importeData;
+    ventasChartInstance.update();
+
+  } catch (e) {
+    console.error("Error cargando datos del gráfico:", e);
+  }
+}
+
 /* INVENTARIO */
 async function loadInventario() {
   try {
@@ -143,7 +272,7 @@ async function loadInventario() {
 async function loadVentas() {
   try {
     const ventas = await fetchJson("/client/sales", { headers: authHeaders() });
-    const tbody = document.getElementById("ventas-body");
+    const tbody  = document.getElementById("ventas-body");
     tbody.innerHTML = ventas.map(v => `
       <tr>
         <td>${v.clientName}</td>

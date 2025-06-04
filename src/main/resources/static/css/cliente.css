@@ -1,43 +1,200 @@
 @import url('base.css');
 
-/* Contenedor principal */
+/* ─── Diseño General ───────────────────────────────────────────────────────── */
+
+/* Contenedor principal: sidebar + contenido */
 .container {
-  max-width: 600px;
-  margin: auto;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px var(--shadow);
-  background-color: var(--card-bg);
+  display: flex;
+  min-height: 100vh;
+  background-color: #f2f5f7;
 }
 
-/* Título de página */
-h1 {
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #0480a3;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar h2 {
+  margin: 0 0 20px;
+  font-size: 1.6rem;
+  letter-spacing: 1px;
   text-align: center;
-  color: #333;
-  margin-bottom: 20px;
 }
 
-/* Etiquetas dentro del form */
-form label {
-  font-weight: bold;
-  margin-top: 15px;
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav li + li {
+  margin-top: 12px;
+}
+
+.sidebar nav a {
   display: block;
-  color: #444;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-/* Botones con clase específica */
-button.btn {
-  /* ya hereda la mayoría de propiedades de base.css */
+.sidebar nav a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Enlace Cerrar sesión: rojo como en Dashboard */
+.logout-btn {
+  background-color: #e74c3c;
+  color: #ffffff;
+  border-radius: 4px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  padding: 30px 40px;
+}
+
+/* Header interno */
+.main-content header {
+  margin-bottom: 30px;
+}
+
+.main-content header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #333333;
+  font-weight: 600;
+}
+
+/* ─── Formulario Cliente ────────────────────────────────────────────────────── */
+
+#clienteForm {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 30px 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Etiquetas */
+#clienteForm label {
+  font-size: 1rem;
+  color: #555555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+/* Inputs de texto y correo */
+#clienteForm input[type="text"],
+#clienteForm input[type="email"],
+#clienteForm input[type="password"],
+#clienteForm select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#clienteForm input[type="text"]:focus,
+#clienteForm input[type="email"]:focus,
+#clienteForm input[type="password"]:focus,
+#clienteForm select:focus {
+  outline: none;
+  border-color: #0480a3;
+  box-shadow: 0 0 4px rgba(4, 128, 163, 0.3);
+  background-color: #ffffff;
+}
+
+/* Selects */
+#clienteForm select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%227%22%20viewBox%3D%220%200%2012%207%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M6%207L0%200h12L6%207z%22%20fill%3D%22%23484848%22/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px 7px;
+  cursor: pointer;
+}
+
+/* Botón de envío */
+#clienteForm button[type="submit"] {
+  background-color: #0480a3;
+  color: #ffffff;
+  font-size: 1rem;
   padding: 12px 20px;
-  border-radius: 6px;
+  border: none;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  align-self: flex-start;
 }
 
-a.btn-back {
-  /* ajustes de color y espaciado */
-  background-color: #6c757d;
-  margin-top: 20px;
+#clienteForm button[type="submit"]:hover {
+  background-color: #036d8b;
 }
 
-a.btn-back:hover {
-  background-color: #5a6268;
+#clienteForm button[type="submit"]:active {
+  transform: translateY(1px);
+}
+
+/* ─── Adaptabilidad para Móviles ────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sidebar h2 {
+    font-size: 1.2rem;
+  }
+
+  .sidebar nav li + li {
+    margin-top: 0;
+    margin-left: 12px;
+  }
+
+  .sidebar nav a {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  #clienteForm {
+    padding: 20px;
+    gap: 16px;
+  }
 }

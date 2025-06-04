@@ -56,4 +56,19 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     BigDecimal totalRevenueSince(
             @Param("since") LocalDateTime since
     );
+    @Query(value = """
+    SELECT
+      DATE(created_at)              AS fecha,
+      COUNT(*)                      AS ventas,
+      COALESCE(SUM(total_amount),0) AS importe
+    FROM sale
+    WHERE client_id = :clientId
+      AND created_at >= :startDate
+    GROUP BY fecha
+    ORDER BY fecha
+    """, nativeQuery = true)
+    List<Object[]> findDailySummaryNative(
+            @Param("clientId")  Long clientId,
+            @Param("startDate") LocalDateTime startDate);
+
 }

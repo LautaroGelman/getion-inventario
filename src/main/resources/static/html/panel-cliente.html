@@ -6,9 +6,10 @@
   <title>Panel Cliente</title>
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="../css/base.css" />
-  <link rel="stylesheet" href="../css/panel.css" />
+  <link rel="stylesheet" href="../css/panelCliente.css" />
 
+  <!-- Chart.js (desde CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Lógica del panel -->
   <script src="../javascript/cliente.js" defer></script>
 </head>
@@ -32,10 +33,16 @@
       Indicadores como stock bajo, últimas ventas y movimientos recientes.
     </p>
     <div id="dash-cards"><!-- tarjetas dinámicas --></div>
+
+    <!-- Gráfico de Ventas e Importe -->
+    <div class="chart-wrapper" style="margin-top: 40px;">
+      <h3>Ventas e Importe ($) por día (Últimos 30 días)</h3>
+      <canvas id="ventasChart"></canvas>
+    </div>
   </section>
 
   <!-- INVENTARIO -->
-  <section id="inventario" class="panel-section" style="display:none;">
+  <section id="inventario" class="panel-section" style="display: none;">
     <h2>Inventario</h2>
     <button id="btn-nuevo-articulo">Nuevo artículo</button>
 
@@ -54,7 +61,7 @@
   </section>
 
   <!-- VENTAS -->
-  <section id="ventas" class="panel-section" style="display:none;">
+  <section id="ventas" class="panel-section" style="display: none;">
     <h2>Ventas</h2>
     <button id="btn-nueva-venta">Registrar nueva venta</button>
 

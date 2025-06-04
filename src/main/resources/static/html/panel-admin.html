@@ -6,12 +6,21 @@
   <title>Admin Panel - Super Panel</title>
   <link rel="stylesheet" href="../css/base.css" />
   <link rel="stylesheet" href="../css/panel.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="../javascript/panel.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      // Datos de ejemplo para ingresos por día en 30 días
+
+  </script>
+
 </head>
+
 <body>
 <div class="container">
   <aside class="sidebar">
-    <h2>Super Panel</h2>
+    <h2>Panel Admin</h2>
     <nav>
       <button data-section="dashboard">Dashboard</button>
       <button data-section="cuentas">Cuentas</button>
@@ -25,35 +34,26 @@
       <header>
         <h1>Bienvenido, Admin</h1>
       </header>
+
       <section class="cards">
-        <div class="card">
-          <h3>Total Cuentas</h3>
-          <p id="totalAccounts">—</p>
-        </div>
-        <div class="card">
-          <h3>Cuentas BÁSICO</h3>
-          <p id="freeTrialAccounts">—</p>
-        </div>
-        <div class="card">
-          <h3>Cuentas INTERMEDIO</h3>
-          <p id="standardAccounts">—</p>
-        </div>
-        <div class="card">
-          <h3>Cuentas PREMIUM</h3>
-          <p id="premiumAccounts">—</p>
-        </div>
+        <div class="card"><h3>Total Cuentas</h3><p id="totalAccounts">—</p></div>
+        <div class="card"><h3>Cuentas FREE</h3><p id="freeTrialAccounts">—</p></div>
+        <div class="card"><h3>Cuentas STANDARD</h3><p id="standardAccounts">—</p></div>
+        <div class="card"><h3>Cuentas PREMIUM</h3><p id="premiumAccounts">—</p></div>
+      </section>
+
+
+      <!-- NUEVA MÉTRICA VISUAL -->
+      <section class="chart-section">
+        <h2>Ingresos por tipo de cuenta</h2>
+        <canvas id="adminChart" width="400" height="200"></canvas>
       </section>
     </section>
 
-    <!-- ── Cuentas ── -->
-    <section id="cuentas" class="panel-section" style="display:none;">
+    <!-- ── Cuentas (oculta por defecto) ── -->
+    <section id="cuentas" class="panel-section" style="display: none;">
       <h2>Cuentas</h2>
-      <button
-              id="btn-nueva-cuenta"
-              onclick="window.location.href='form-cliente.html'"
-      >
-        Nueva Cuenta
-      </button>
+      <button id="btn-nueva-cuenta">Nueva Cuenta</button>
       <table>
         <thead>
         <tr>
@@ -62,15 +62,20 @@
           <th>Teléfono</th>
           <th>Plan</th>
           <th>Estado</th>
-          <th>Acción</th>
+          <th>Edit/Eliminar</th>
         </tr>
         </thead>
+        <!-- Se añadió id="accountsTableBody" para que panel.js pueda inyectar las filas -->
         <tbody id="accountsTableBody">
-        <!-- Aquí panel.js inyectará las filas de las cuentas -->
+        <!-- Aquí panel.js insertará las filas de las cuentas -->
         </tbody>
       </table>
     </section>
   </main>
 </div>
+
+<footer style="text-align: center; padding: 1rem; background-color: #f1f1f1; margin-top: 2rem;">
+  <small>&copy; 2025 Sistema de Ventas. Todos los derechos reservados.</small>
+</footer>
 </body>
 </html>
