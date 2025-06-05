@@ -1,4 +1,3 @@
-// src/main/java/grupo5/gestion_inventario/controller/ClientSalesController.java
 package grupo5.gestion_inventario.controller;
 
 import grupo5.gestion_inventario.clientpanel.dto.SaleDto;
@@ -25,10 +24,12 @@ public class ClientSalesController {
     @PostMapping
     public ResponseEntity<SaleDto> createSale(@RequestBody SaleRequest request,
                                               Authentication auth) {
+        // Busca el ID del cliente (Long) usando el usuario autenticado
         Long clientId = clientRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"))
                 .getId();
 
+        // Llama al servicio pasándole el clientId (Long), que es lo que espera
         SaleDto dto = salesService.createSale(clientId, request);
         return ResponseEntity.status(201).body(dto);
     }

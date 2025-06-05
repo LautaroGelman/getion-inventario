@@ -33,7 +33,7 @@ public class Product {
     private Integer lowStockThreshold;
 
     @ManyToOne(fetch = FetchType.LAZY)
-   // @JoinColumn(name = "client_id", nullable = false)
+    @JoinColumn(name = "client_id", nullable = false)
     @JsonBackReference
     private Client client;
 

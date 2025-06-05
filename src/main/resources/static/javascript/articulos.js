@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
-      const res = await fetch("/products", {
+      const res = await fetch("/client/products", { // <-- ✅ ¡CAMBIO REALIZADO AQUÍ!
         method:      "POST",
         credentials: "include",
         headers:     authHeaders(),
@@ -52,4 +52,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-

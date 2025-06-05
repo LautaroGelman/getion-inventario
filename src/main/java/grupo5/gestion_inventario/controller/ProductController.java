@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/client/products") // <-- ¡CAMBIO APLICADO AQUÍ!
 public class ProductController {
 
     private final ProductService   productService;
@@ -28,6 +28,7 @@ public class ProductController {
 
     /**
      * Crea un producto asociado al cliente autenticado y devuelve su DTO.
+     * URL: POST /client/products
      */
     @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody ProductRequest req,
@@ -35,13 +36,14 @@ public class ProductController {
         Client client = clientRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
 
-        ProductDto dto = productService.create(client, req);   // ← pasamos el objeto
+        ProductDto dto = productService.create(client, req);
         return ResponseEntity.ok(dto);
     }
 
 
     /**
      * Lista productos del cliente autenticado como DTOs.
+     * URL: GET /client/products
      */
     @GetMapping
     public ResponseEntity<List<ProductDto>> list(Authentication auth) {

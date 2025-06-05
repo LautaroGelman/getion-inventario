@@ -45,10 +45,18 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async e => {
     e.preventDefault();
     const data = new FormData(form);
-
     const selected = selectA.selectedOptions[0];
+
+    // --- LEEMOS LA FECHA DEL FORMULARIO ---
+    // (Asegúrate de que tu input de fecha en el HTML tenga name="fecha-venta")
+    const saleDateValue = data.get("fecha-venta");
+
     const payload = {
       paymentMethod: data.get("metodo-pago"),
+      // --- AÑADIMOS LA FECHA AL PAYLOAD ---
+      // Si el campo de fecha no está vacío, lo enviamos en formato ISO (YYYY-MM-DDTHH:MM:SS).
+      // Si está vacío, enviamos null y el backend usará la fecha actual.
+      saleDate: saleDateValue ? (saleDateValue + "T12:00:00") : null,
       items: [
         {
           productId: parseInt(selected.dataset.productId, 10),
@@ -57,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       ]
     };
+    console.log("Payload enviado:", JSON.stringify(payload, null, 2));
 
     try {
       const res = await fetch("/client/sales", {
@@ -71,13 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       alert("Venta registrada con éxito");
       form.reset();
-
-      // ─────────── Forzar recarga de inventario ───────────
-      // Marcamos en localStorage que el panel debe recargar inventario
       localStorage.setItem("reloadInventory", "true");
-      // ──────────────────────────────────────────────────────
-
-      // Redirigimos a #inventario para forzar recarga de ese apartado
       window.location.href = "panel-cliente.html#inventario";
     } catch (err) {
       alert("Error al registrar venta: " + err.message);

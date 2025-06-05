@@ -16,15 +16,12 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Fecha y hora de la venta */
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    /** Medio de pago, e.g. "CASH", "CARD" */
     @Column(nullable = false)
     private String paymentMethod;
 
-    /** Monto total de la venta */
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal totalAmount;
 
@@ -33,25 +30,29 @@ public class Sale {
     private Client client;
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference      // <<--- rompe la recursión aquí
+    @JsonManagedReference
     private List<SaleItem> items = new ArrayList<>();
 
-    /* ---------- constructores ---------- */
+    // --- Constructores Corregidos ---
 
-    /** Constructor por defecto */
+    /**
+     * Constructor por defecto.
+     * Se elimina la asignación de 'createdAt' para que se pueda establecer después.
+     */
     public Sale() {
-        this.createdAt   = LocalDateTime.now();
         this.totalAmount = BigDecimal.ZERO;
     }
 
     /**
-     * Constructor completo (createdAt = now)
+     * Constructor completo. Ahora acepta la fecha de la venta como parámetro.
      */
     public Sale(String paymentMethod,
                 BigDecimal totalAmount,
                 Client client,
-                List<SaleItem> items) {
-        this.createdAt     = LocalDateTime.now();
+                List<SaleItem> items,
+                LocalDateTime saleDate) { // <-- PARÁMETRO AÑADIDO
+        // Usa la fecha recibida. Si es nula, usa la actual como respaldo.
+        this.createdAt     = (saleDate != null) ? saleDate : LocalDateTime.now();
         this.paymentMethod = paymentMethod;
         this.totalAmount   = totalAmount != null ? totalAmount : BigDecimal.ZERO;
         this.client        = client;
@@ -60,7 +61,7 @@ public class Sale {
         }
     }
 
-    /* ---------- getters / setters ---------- */
+    // --- Getters y Setters (se mantienen igual) ---
 
     public Long getId()                     { return id; }
     public LocalDateTime getCreatedAt()     { return createdAt; }
@@ -77,9 +78,6 @@ public class Sale {
 
     public List<SaleItem> getItems()        { return items; }
 
-    /**
-     * Reemplaza items y recalcula el total.
-     */
     public void setItems(List<SaleItem> items) {
         this.items.clear();
         this.totalAmount = BigDecimal.ZERO;
@@ -90,9 +88,8 @@ public class Sale {
         }
     }
 
-    /* ---------- helpers ---------- */
+    // --- Helpers (se mantienen igual) ---
 
-    /** Agrega un ítem y actualiza totalAmount */
     public void addItem(SaleItem item) {
         item.setSale(this);
         items.add(item);
@@ -101,7 +98,6 @@ public class Sale {
         );
     }
 
-    /** Vuelve a calcular el total desde cero (por si se editaron cantidades) */
     public void recalcTotal() {
         totalAmount = BigDecimal.ZERO;
         for (SaleItem item : items) {
@@ -109,5 +105,21 @@ public class Sale {
                     item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
             );
         }
+    }
+
+    // En tu archivo Sale.java
+
+    /**
+     * Constructor para usar en el servicio. Ahora acepta la fecha.
+     * @param client El cliente que realiza la compra.
+     * @param paymentMethod El método de pago.
+     * @param saleDate La fecha de la venta (puede ser nula, en cuyo caso se usa la actual).
+     */
+    public Sale(Client client, String paymentMethod, LocalDateTime saleDate) {
+        this.client = client;
+        this.paymentMethod = paymentMethod;
+        // Usa la fecha recibida. Si es nula, usa la fecha/hora actual como respaldo.
+        this.createdAt = (saleDate != null) ? saleDate : LocalDateTime.now();
+        this.totalAmount = BigDecimal.ZERO;
     }
 }

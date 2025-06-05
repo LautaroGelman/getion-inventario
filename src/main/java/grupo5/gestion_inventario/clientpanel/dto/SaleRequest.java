@@ -1,33 +1,20 @@
-// src/main/java/grupo5/gestion_inventario/clientpanel/dto/SaleRequest.java
 package grupo5.gestion_inventario.clientpanel.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * DTO para capturar la petición de crear una venta desde el panel cliente.
- */
 public class SaleRequest {
-
     private String paymentMethod;
+    private LocalDateTime saleDate;
     private List<SaleItemRequest> items;
 
-    public SaleRequest() {
-    }
+    // Getters y Setters
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
+    public LocalDateTime getSaleDate() { return saleDate; }
+    public void setSaleDate(LocalDateTime saleDate) { this.saleDate = saleDate; }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public List<SaleItemRequest> getItems() {
-        return items;
-    }
-
-    public void setItems(List<SaleItemRequest> items) {
-        this.items = items;
-    }
-
+    public List<SaleItemRequest> getItems() { return items; }
+    public void setItems(List<SaleItemRequest> items) { this.items = items; }
 }
