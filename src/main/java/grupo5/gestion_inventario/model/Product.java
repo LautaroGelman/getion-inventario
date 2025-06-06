@@ -7,7 +7,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(
         name = "product",
-        uniqueConstraints = @UniqueConstraint(columnNames = "code")
+        // --- ¡CAMBIO REALIZADO AQUÍ! ---
+        // Ahora la restricción única es sobre la combinación del ID del cliente y el código del producto.
+        uniqueConstraints = @UniqueConstraint(columnNames = {"client_id", "code"})
 )
 public class Product {
 
@@ -15,13 +17,18 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    // --- ¡CAMBIO REALIZADO AQUÍ! ---
+    // Se elimina `unique = true` porque la restricción ahora está a nivel de tabla.
+    @Column(nullable = false)
     private String code;
 
     @Column(nullable = false)
     private String name;
 
     private String description;
+
+    @Column(nullable = false)
+    private BigDecimal cost;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -44,6 +51,7 @@ public class Product {
     public Product(String code,
                    String name,
                    String description,
+                   BigDecimal cost,
                    BigDecimal price,
                    Integer stockQuantity,
                    Integer lowStockThreshold,
@@ -51,13 +59,14 @@ public class Product {
         this.code              = code;
         this.name              = name;
         this.description       = description;
+        this.cost              = cost;
         this.price             = price;
         this.stockQuantity     = stockQuantity;
         this.lowStockThreshold = lowStockThreshold;
         this.client            = client;
     }
 
-    // — Getters & Setters —
+    // — Getters & Setters (sin cambios) —
 
     public Long getId() {
         return id;
@@ -82,6 +91,13 @@ public class Product {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
     }
 
     public BigDecimal getPrice() {

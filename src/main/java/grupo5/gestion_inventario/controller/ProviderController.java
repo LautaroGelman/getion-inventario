@@ -9,44 +9,44 @@ import org.springframework.web.bind.annotation.*;
 import grupo5.gestion_inventario.clientpanel.model.Provider;
 import grupo5.gestion_inventario.service.ProviderService;
 
+/**
+ * ESTE CONTROLADOR HA SIDO REEMPLAZADO POR ClientProviderController PARA LA LÓGICA
+ * DEL PANEL DE CLIENTE. SE COMENTA PARA EVITAR ERRORES DE COMPILACIÓN.
+ */
 @RestController
 @RequestMapping("/clients/{clientId}/providers")
 public class ProviderController {
 
+    /*
     private final ProviderService service;
 
     public ProviderController(ProviderService service) {
         this.service = service;
     }
 
-    /**
-     * POST /clients/{clientId}/providers
-     */
     @PostMapping
     public ResponseEntity<Provider> create(@PathVariable Long clientId,
                                            @RequestBody Provider provider) {
-        Provider created = service.create(clientId, provider);
-        return ResponseEntity.ok(created);
+        // La siguiente línea es la que causa el error y ha sido corregida en ClientProviderController
+        // Provider created = service.create(clientId, provider);
+        // return ResponseEntity.ok(created);
+        return null; // Se devuelve null para que el código compile
     }
 
-    /**
-     * GET /clients/{clientId}/providers
-     */
     @GetMapping
     public ResponseEntity<List<Provider>> list(@PathVariable Long clientId) {
         List<Provider> providers = service.findByClientId(clientId);
         return ResponseEntity.ok(providers);
     }
 
-    /**
-     * DELETE /clients/{clientId}/providers/{providerId}
-     */
     @DeleteMapping("/{providerId}")
     public ResponseEntity<Void> delete(@PathVariable Long clientId,
                                        @PathVariable Long providerId) {
-        if (service.delete(clientId, providerId)) {
-            return ResponseEntity.noContent().build();
-        }
+        // La lógica de borrado también fue movida a ClientProviderController
+        // if (service.delete(clientId, providerId)) {
+        //     return ResponseEntity.noContent().build();
+        // }
         return ResponseEntity.notFound().build();
     }
+    */
 }

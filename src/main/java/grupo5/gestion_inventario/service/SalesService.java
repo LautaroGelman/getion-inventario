@@ -1,5 +1,6 @@
 package grupo5.gestion_inventario.service;
 
+import grupo5.gestion_inventario.clientpanel.dto.ProfitabilitySummaryDto;
 import grupo5.gestion_inventario.clientpanel.dto.SaleDto;
 import grupo5.gestion_inventario.clientpanel.dto.SaleRequest;
 import grupo5.gestion_inventario.clientpanel.dto.SalesDailySummaryDto;
@@ -39,19 +40,16 @@ public class SalesService {
     /* ─────────────────── NUEVA VENTA (CORREGIDO PARA TU CONTROLADOR) ─────────────────── */
 
     @Transactional
-    public SaleDto createSale(Long clientId, SaleRequest req) { // <-- 1. VOLVEMOS A ACEPTAR clientId (Long)
+    public SaleDto createSale(Long clientId, SaleRequest req) {
 
         System.out.println("--- FECHA RECIBIDA EN EL SERVICIO: " + req.getSaleDate() + " ---");
 
-        // 2. BUSCAMOS POR ID, COMO HACÍA TU CÓDIGO ORIGINAL
         Client client = clientRepo.findById(clientId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Cliente no encontrado: " + clientId));
 
-        // 3. USAMOS EL CONSTRUCTOR CORREGIDO DE SALE PARA USAR LA FECHA DEL FORMULARIO
         Sale sale = new Sale(client, req.getPaymentMethod(), req.getSaleDate());
 
-        /* Mapeamos cada ítem y descontamos stock */
         req.getItems().forEach(itemRequest -> {
             Product product = productRepo.findById(itemRequest.getProductId())
                     .orElseThrow(() ->
@@ -70,7 +68,6 @@ public class SalesService {
 
         Sale saved = saleRepo.save(sale);
 
-        /* Convertimos a DTO para el front */
         String itemNames = saved.getItems().stream()
                 .map(i -> i.getProduct().getName())
                 .collect(Collectors.joining(", "));
@@ -79,7 +76,7 @@ public class SalesService {
                 .sum();
 
         return new SaleDto(
-                client.getName(), // Usando el método correcto que ya corregimos
+                client.getName(),
                 itemNames,
                 totalQty,
                 saved.getTotalAmount(),
@@ -88,7 +85,7 @@ public class SalesService {
         );
     }
 
-    // ... (EL RESTO DE TUS MÉTODOS SE MANTIENEN EXACTAMENTE IGUAL) ...
+    // ... (EL RESTO DE TUS MÉTODOS SE MANTIENEN IGUAL) ...
 
     @Transactional(readOnly = true)
     public long countSalesToday(Long clientId) {
@@ -151,6 +148,44 @@ public class SalesService {
             LocalDate d = start.plusDays(i);
             result.add(map.getOrDefault(
                     d, new SalesDailySummaryDto(d, 0, BigDecimal.ZERO)));
+        }
+        return result;
+    }
+
+    // --- ¡NUEVO MÉTODO AÑADIDO AQUÍ! ---
+    @Transactional(readOnly = true)
+    public List<ProfitabilitySummaryDto> getProfitabilitySummaryLastDays(Long clientId, int days) {
+        if (!clientRepo.existsById(clientId)) {
+            throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
+        }
+
+        LocalDate startDate = LocalDate.now().minusDays(days - 1);
+        List<Object[]> rawData = saleRepo.findDailyProfitabilitySummaryNative(clientId, startDate.atStartOfDay());
+
+        // Mapeamos los resultados por fecha para una búsqueda fácil
+        Map<LocalDate, ProfitabilitySummaryDto> map = rawData.stream()
+                .collect(Collectors.toMap(
+                        row -> ((java.sql.Date) row[0]).toLocalDate(), // Clave: Fecha
+                        row -> {
+                            BigDecimal revenue = (BigDecimal) row[1];
+                            BigDecimal cost = (BigDecimal) row[2];
+                            BigDecimal profit = revenue.subtract(cost); // Cálculo de la ganancia
+                            return new ProfitabilitySummaryDto(
+                                    ((java.sql.Date) row[0]).toLocalDate(),
+                                    revenue,
+                                    cost,
+                                    profit
+                            );
+                        }
+                ));
+
+        // Rellenamos los días sin ventas para asegurar un rango de fechas continuo para el gráfico
+        List<ProfitabilitySummaryDto> result = new ArrayList<>();
+        for (int i = 0; i < days; i++) {
+            LocalDate day = startDate.plusDays(i);
+            result.add(map.getOrDefault(
+                    day, new ProfitabilitySummaryDto(day, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO)
+            ));
         }
         return result;
     }

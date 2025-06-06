@@ -71,4 +71,29 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
             @Param("clientId")  Long clientId,
             @Param("startDate") LocalDateTime startDate);
 
+    // --- ¡NUEVO MÉTODO AÑADIDO AQUÍ! ---
+    /**
+     * Obtiene un resumen diario de rentabilidad (ingresos y costos) para un cliente.
+     * Utiliza una consulta nativa para unir las tablas de ventas, ítems de venta y productos.
+     * @return Una lista de Object[], donde cada array contiene:
+     * [0] -> Fecha (java.sql.Date)
+     * [1] -> Ingresos totales (BigDecimal)
+     * [2] -> Costos totales (BigDecimal)
+     */
+    @Query(value = """
+    SELECT
+        DATE(s.created_at) AS sale_date,
+        COALESCE(SUM(s.total_amount), 0) AS total_revenue,
+        COALESCE(SUM(si.quantity * p.cost), 0) AS total_cost_of_goods
+    FROM sale s
+    JOIN sale_item si ON s.id = si.sale_id
+    JOIN product p ON si.product_id = p.id
+    WHERE s.client_id = :clientId AND s.created_at >= :startDate
+    GROUP BY sale_date
+    ORDER BY sale_date
+    """, nativeQuery = true)
+    List<Object[]> findDailyProfitabilitySummaryNative(
+            @Param("clientId") Long clientId,
+            @Param("startDate") LocalDateTime startDate
+    );
 }

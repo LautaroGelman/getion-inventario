@@ -2,7 +2,9 @@ package grupo5.gestion_inventario.controller;
 
 import grupo5.gestion_inventario.clientpanel.dto.ClientDashboardDto;
 import grupo5.gestion_inventario.clientpanel.dto.ProductDto;
+import grupo5.gestion_inventario.clientpanel.dto.ProfitabilitySummaryDto;
 import grupo5.gestion_inventario.clientpanel.dto.SaleDto;
+import grupo5.gestion_inventario.clientpanel.dto.SalesDailySummaryDto; // <-- IMPORT AÑADIDO
 import grupo5.gestion_inventario.model.Client;
 import grupo5.gestion_inventario.repository.ClientRepository;
 import grupo5.gestion_inventario.service.ProductService;
@@ -32,10 +34,6 @@ public class ClientDashboardController {
         this.salesService   = salesService;
     }
 
-    /**
-     * Datos para las tarjetas del dashboard del cliente.
-     * GET /client/dashboard
-     */
     @GetMapping("/dashboard")
     public ResponseEntity<ClientDashboardDto> dashboard(Authentication auth) {
         Client client = clientRepo.findByEmail(auth.getName())
@@ -48,10 +46,34 @@ public class ClientDashboardController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/dashboard/profitability-summary")
+    public ResponseEntity<List<ProfitabilitySummaryDto>> getProfitabilitySummary(
+            @RequestParam(defaultValue = "30") int days,
+            Authentication auth) {
+        Client client = clientRepo.findByEmail(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        List<ProfitabilitySummaryDto> summary = salesService.getProfitabilitySummaryLastDays(client.getId(), days);
+        return ResponseEntity.ok(summary);
+    }
+
+    // --- ¡NUEVO ENDPOINT AÑADIDO PARA CORREGIR EL BUG! ---
     /**
-     * Inventario (listado de productos del cliente).
-     * GET /client/items
+     * Datos para el gráfico de volumen de ventas e importe.
+     * GET /client/sales/summary?days=30
      */
+    @GetMapping("/sales/summary")
+    public ResponseEntity<List<SalesDailySummaryDto>> getSalesSummary(
+            @RequestParam(defaultValue = "30") int days,
+            Authentication auth) {
+        Client client = clientRepo.findByEmail(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        List<SalesDailySummaryDto> summary = salesService.summaryLastDays(client.getId(), days);
+        return ResponseEntity.ok(summary);
+    }
+
+
     @GetMapping("/items")
     public ResponseEntity<List<ProductDto>> items(Authentication auth) {
         Client client = clientRepo.findByEmail(auth.getName())
@@ -61,10 +83,6 @@ public class ClientDashboardController {
         return ResponseEntity.ok(products);
     }
 
-    /**
-     * Ventas (listado de ventas del cliente).
-     * GET /client/sales
-     */
     @GetMapping("/sales")
     public ResponseEntity<List<SaleDto>> sales(Authentication auth) {
         Client client = clientRepo.findByEmail(auth.getName())

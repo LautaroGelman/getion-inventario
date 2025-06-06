@@ -4,14 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Formulario Artículo</title>
-  <!-- Importamos los estilos base compartidos -->
   <link rel="stylesheet" href="../css/base.css" />
-  <!-- Importamos los estilos específicos para este formulario -->
   <link rel="stylesheet" href="../css/articulos.css" />
   <script src="../javascript/articulos.js" defer></script>
 </head>
 <body>
-<!-- Contenedor que centra vertical y horizontalmente -->
 <div class="container-form">
   <header class="form-header">
     <h1>Formulario de Artículo</h1>
@@ -36,6 +33,11 @@
       <div class="form-group">
         <label for="stock">Stock:</label>
         <input type="number" id="stock" name="stock" min="0" required />
+      </div>
+
+      <div class="form-group">
+        <label for="costo">Costo:</label>
+        <input type="number" id="costo" name="costo" min="0" step="0.01" required />
       </div>
 
       <div class="form-group">
