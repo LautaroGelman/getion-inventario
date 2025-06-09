@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
 function EmployeeFormPage() {
@@ -31,12 +33,17 @@ function EmployeeFormPage() {
         } else {
             await api.post('/client/employees', payload);
         }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await api.post('/client/employees', { name, email, passwordHash: password, role });
         navigate(-1);
     };
 
     return (
         <div className="form-container">
             <h2>{employeeId ? 'Editar Empleado' : 'Nuevo Empleado'}</h2>
+            <h2>Nuevo Empleado</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Nombre</label>
@@ -54,6 +61,8 @@ function EmployeeFormPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required={!employeeId}
                     />
+                    <label>Contraseña</label>
+                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
                 <div>
                     <label>Rol</label>

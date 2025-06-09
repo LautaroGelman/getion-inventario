@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+=======
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EmployeeService {
@@ -23,6 +27,10 @@ public class EmployeeService {
         this.repo = repo;
         this.clientRepo = clientRepo;
         this.passwordEncoder = passwordEncoder;
+
+    public EmployeeService(EmployeeRepository repo, ClientRepository clientRepo) {
+        this.repo = repo;
+        this.clientRepo = clientRepo;
     }
 
     public Employee create(Long clientId, Employee e) {
@@ -50,6 +58,9 @@ public class EmployeeService {
         }
         existing.setRole(data.getRole());
         return repo.save(existing);
+    }
+
+        return repo.save(e);
     }
 
     public List<Employee> listByClient(Long clientId) {

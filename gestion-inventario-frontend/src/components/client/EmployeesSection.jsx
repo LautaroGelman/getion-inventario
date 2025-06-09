@@ -19,6 +19,14 @@ function EmployeesSection() {
         load();
     };
 
+    useEffect(() => {
+        const load = async () => {
+            const data = await api.get('/client/employees');
+            setEmployees(data);
+        };
+        load();
+    }, []);
+
     return (
         <div>
             <h2>Gestión de Empleados</h2>
@@ -31,6 +39,7 @@ function EmployeesSection() {
                         <Link to={`/empleados/${e.id}`}>Editar</Link>
                         <button onClick={() => handleDelete(e.id)}>Eliminar</button>
                     </li>
+                    <li key={e.id}>{e.name} - {e.role}</li>
                 ))}
             </ul>
         </div>
