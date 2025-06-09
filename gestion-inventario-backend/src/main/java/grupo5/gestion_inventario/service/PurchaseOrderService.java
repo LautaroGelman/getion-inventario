@@ -77,10 +77,16 @@ public class PurchaseOrderService {
             item.setProduct(product);
             item.setQuantity(itemRequest.getQuantity());
             item.setCost(itemRequest.getCost());
+            item.setTax(itemRequest.getTax());
+            item.setDiscount(itemRequest.getDiscount());
             item.setPurchaseOrder(purchaseOrder); // Establecer la relación bidireccional
 
             items.add(item);
-            totalCost = totalCost.add(item.getCost().multiply(BigDecimal.valueOf(item.getQuantity())));
+            totalCost = totalCost.add(
+                    item.getCost().multiply(BigDecimal.valueOf(item.getQuantity()))
+                            .add(item.getTax())
+                            .subtract(item.getDiscount())
+            );
         }
 
         // 4. Asignar los valores finales y guardar

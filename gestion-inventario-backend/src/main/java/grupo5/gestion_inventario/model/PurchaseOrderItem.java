@@ -28,6 +28,12 @@ public class PurchaseOrderItem {
     @Column(nullable = false)
     private BigDecimal cost;
 
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal tax = BigDecimal.ZERO;
+
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal discount = BigDecimal.ZERO;
+
     // Getters y Setters
 
     public Long getId() {
@@ -68,5 +74,21 @@ public class PurchaseOrderItem {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public BigDecimal getTax() {
+        return tax;
+    }
+
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 }

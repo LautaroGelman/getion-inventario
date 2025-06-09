@@ -105,6 +105,8 @@ public class Sale {
         items.add(item);
         totalAmount = totalAmount.add(
                 item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
+                        .add(item.getTax())
+                        .subtract(item.getDiscount())
         );
     }
 
@@ -113,6 +115,8 @@ public class Sale {
         for (SaleItem item : items) {
             totalAmount = totalAmount.add(
                     item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
+                            .add(item.getTax())
+                            .subtract(item.getDiscount())
             );
         }
     }
