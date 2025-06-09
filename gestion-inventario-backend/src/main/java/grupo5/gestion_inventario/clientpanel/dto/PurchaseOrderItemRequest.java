@@ -8,6 +8,9 @@ public class PurchaseOrderItemRequest {
     private int quantity;
     private BigDecimal cost;
 
+    private BigDecimal tax;
+    private BigDecimal discount;
+
     // Getters y Setters
 
     public Long getProductId() {
@@ -32,5 +35,21 @@ public class PurchaseOrderItemRequest {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public BigDecimal getTax() {
+        return tax;
+    }
+
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 }

@@ -31,6 +31,14 @@ public class SaleItem {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal unitPrice;
 
+    /** Impuesto aplicado al ítem */
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal tax = BigDecimal.ZERO;
+
+    /** Descuento aplicado al ítem */
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal discount = BigDecimal.ZERO;
+
     /** Constructor por defecto */
     public SaleItem() {}
 
@@ -40,10 +48,13 @@ public class SaleItem {
      * @param quantity  Cantidad vendida
      * @param unitPrice Precio unitario
      */
-    public SaleItem(Product product, Integer quantity, BigDecimal unitPrice) {
+    public SaleItem(Product product, Integer quantity, BigDecimal unitPrice,
+                    BigDecimal tax, BigDecimal discount) {
         this.product   = product;
         this.quantity  = quantity;
         this.unitPrice = unitPrice;
+        this.tax       = tax != null ? tax : BigDecimal.ZERO;
+        this.discount  = discount != null ? discount : BigDecimal.ZERO;
     }
 
     // —— Getters & Setters ——
@@ -78,6 +89,20 @@ public class SaleItem {
     }
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public BigDecimal getTax() {
+        return tax;
+    }
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 }
 

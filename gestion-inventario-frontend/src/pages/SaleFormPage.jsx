@@ -12,6 +12,8 @@ function SaleFormPage() {
     const [customers, setCustomers] = useState([]);
     const [selectedCustomerId, setSelectedCustomerId] = useState('');
     const [quantity, setQuantity] = useState(1);
+    const [tax, setTax] = useState(0);
+    const [discount, setDiscount] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState('');
     const [saleDate, setSaleDate] = useState('');
 
@@ -58,6 +60,8 @@ function SaleFormPage() {
                     productId: selectedArticle.id,
                     quantity: parseInt(quantity, 10),
                     unitPrice: selectedArticle.price,
+                    tax: parseFloat(tax),
+                    discount: parseFloat(discount),
                 },
             ],
         };
@@ -107,6 +111,16 @@ function SaleFormPage() {
                     <div className="form-group">
                         <label htmlFor="cantidad">Cantidad:</label>
                         <input type="number" id="cantidad" name="cantidad" min="1" required value={quantity} onChange={e => setQuantity(e.target.value)} />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="tax">IVA:</label>
+                        <input type="number" id="tax" step="0.01" min="0" value={tax} onChange={e => setTax(e.target.value)} />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="discount">Descuento:</label>
+                        <input type="number" id="discount" step="0.01" min="0" value={discount} onChange={e => setDiscount(e.target.value)} />
                     </div>
 
                     <div className="form-group">

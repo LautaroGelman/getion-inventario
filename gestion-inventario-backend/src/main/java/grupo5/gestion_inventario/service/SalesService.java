@@ -74,7 +74,13 @@ public class SalesService {
             }
             product.setStockQuantity(newStock);
 
-            SaleItem item = new SaleItem(product, itemRequest.getQuantity(), itemRequest.getUnitPrice());
+            SaleItem item = new SaleItem(
+                    product,
+                    itemRequest.getQuantity(),
+                    itemRequest.getUnitPrice(),
+                    itemRequest.getTax(),
+                    itemRequest.getDiscount()
+            );
             sale.addItem(item);
         });
 

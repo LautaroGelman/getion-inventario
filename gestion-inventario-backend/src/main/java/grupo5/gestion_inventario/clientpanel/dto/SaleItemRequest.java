@@ -16,6 +16,12 @@ public class SaleItemRequest {
     /** Precio unitario */
     private BigDecimal unitPrice;
 
+    /** Impuesto aplicado */
+    private BigDecimal tax;
+
+    /** Descuento aplicado */
+    private BigDecimal discount;
+
     public SaleItemRequest() { }
 
     public Long getProductId() {
@@ -40,5 +46,21 @@ public class SaleItemRequest {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public BigDecimal getTax() {
+        return tax;
+    }
+
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 }

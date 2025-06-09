@@ -9,7 +9,7 @@ function PurchaseOrderFormPage() {
     const [providers, setProviders] = useState([]);
     const [products, setProducts] = useState([]);
     const [items, setItems] = useState([
-        { productId: '', quantity: 1, cost: 0 }
+        { productId: '', quantity: 1, cost: 0, tax: 0, discount: 0 }
     ]);
     const [providerId, setProviderId] = useState('');
     const [loading, setLoading] = useState(true);
@@ -38,7 +38,7 @@ function PurchaseOrderFormPage() {
     };
 
     const addItem = () => {
-        setItems(prev => [...prev, { productId: '', quantity: 1, cost: 0 }]);
+        setItems(prev => [...prev, { productId: '', quantity: 1, cost: 0, tax: 0, discount: 0 }]);
     };
 
     const removeItem = (index) => {
@@ -55,7 +55,9 @@ function PurchaseOrderFormPage() {
             items: items.map(it => ({
                 productId: parseInt(it.productId, 10),
                 quantity: parseInt(it.quantity, 10),
-                cost: parseFloat(it.cost)
+                cost: parseFloat(it.cost),
+                tax: parseFloat(it.tax),
+                discount: parseFloat(it.discount)
             }))
         };
         try {
@@ -98,6 +100,8 @@ function PurchaseOrderFormPage() {
                             </select>
                             <input type="number" min="1" value={item.quantity} onChange={e => handleItemChange(idx, 'quantity', e.target.value)} />
                             <input type="number" min="0" step="0.01" value={item.cost} onChange={e => handleItemChange(idx, 'cost', e.target.value)} />
+                            <input type="number" min="0" step="0.01" value={item.tax} onChange={e => handleItemChange(idx, 'tax', e.target.value)} placeholder="IVA" />
+                            <input type="number" min="0" step="0.01" value={item.discount} onChange={e => handleItemChange(idx, 'discount', e.target.value)} placeholder="Descuento" />
                             {items.length > 1 && <button type="button" className="btn-delete" onClick={() => removeItem(idx)}>Eliminar</button>}
                         </div>
                     ))}
