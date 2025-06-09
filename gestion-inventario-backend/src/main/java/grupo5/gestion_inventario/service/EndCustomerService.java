@@ -2,8 +2,8 @@ package grupo5.gestion_inventario.service;
 
 import grupo5.gestion_inventario.clientpanel.model.EndCustomer;
 import grupo5.gestion_inventario.clientpanel.repository.EndCustomerRepository;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,21 +13,21 @@ import java.util.Optional;
 @Service
 public class EndCustomerService {
     private final EndCustomerRepository repo;
-    private final ClientRepository clientRepo;
+    private final EmployeeRepository employeeRepo;
 
-    public EndCustomerService(EndCustomerRepository repo, ClientRepository clientRepo) {
+    public EndCustomerService(EndCustomerRepository repo, EmployeeRepository employeeRepo) {
         this.repo = repo;
-        this.clientRepo = clientRepo;
+        this.employeeRepo = employeeRepo;
     }
 
     @Transactional
-    public EndCustomer create(Client client, EndCustomer customer) {
+    public EndCustomer create(Employee client, EndCustomer customer) {
         customer.setClient(client);
         return repo.save(customer);
     }
 
     @Transactional
-    public Optional<EndCustomer> update(Long id, EndCustomer data, Client client) {
+    public Optional<EndCustomer> update(Long id, EndCustomer data, Employee client) {
         return repo.findById(id)
                 .filter(c -> c.getClient().getId().equals(client.getId()))
                 .map(c -> {
@@ -38,7 +38,7 @@ public class EndCustomerService {
     }
 
     @Transactional
-    public boolean delete(Long id, Client client) {
+    public boolean delete(Long id, Employee client) {
         return repo.findById(id)
                 .filter(c -> c.getClient().getId().equals(client.getId()))
                 .map(c -> { repo.delete(c); return true; })
@@ -47,14 +47,14 @@ public class EndCustomerService {
 
     @Transactional(readOnly = true)
     public List<EndCustomer> listByClient(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return repo.findByClientId(clientId);
     }
 
     @Transactional(readOnly = true)
-    public Optional<EndCustomer> findByIdAndClient(Long id, Client client) {
+    public Optional<EndCustomer> findByIdAndClient(Long id, Employee client) {
         return repo.findById(id).filter(c -> c.getClient().getId().equals(client.getId()));
     }
 }

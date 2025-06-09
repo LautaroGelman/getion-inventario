@@ -2,7 +2,7 @@
 package grupo5.gestion_inventario.clientpanel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,7 +34,7 @@ public class Expense {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     @JsonIgnore
-    private Client client;
+    private Employee client;
 
     /** Constructor por defecto */
     public Expense() {}
@@ -51,7 +51,7 @@ public class Expense {
                    BigDecimal amount,
                    String type,
                    LocalDate date,
-                   Client client) {
+                   Employee client) {
         this.description = description;
         this.amount      = amount;
         this.type        = type;
@@ -93,10 +93,10 @@ public class Expense {
         this.date = date;
     }
 
-    public Client getClient() {
+    public Employee getClient() {
         return client;
     }
-    public void setClient(Client client) {
+    public void setClient(Employee client) {
         this.client = client;
     }
 }

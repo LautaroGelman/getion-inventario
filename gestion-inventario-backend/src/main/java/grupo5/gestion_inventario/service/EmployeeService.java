@@ -5,9 +5,9 @@
 package grupo5.gestion_inventario.service;
 
 import java.util.List;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import org.springframework.stereotype.Service;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 
 /**
  *
@@ -16,29 +16,29 @@ import grupo5.gestion_inventario.repository.ClientRepository;
 
 
 @Service
-public class ClientService {
+public class EmployeeService {
 
-    private final ClientRepository repo;
+    private final EmployeeRepository repo;
 
-    public ClientService(ClientRepository repo) {
+    public EmployeeService(EmployeeRepository repo) {
         this.repo = repo;
     }
 
-    public Client create(Client c) {
+    public Employee create(Employee c) {
         return repo.save(c);
     }
 
-    public List<Client> findAll() {
+    public List<Employee> findAll() {
         return repo.findAll();
     }
 
-    public Client findById(Long id) {
+    public Employee findById(Long id) {
         return repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Employeee no encontrado"));
     }
 
-    public Client update(Long id, Client data) {
-        Client c = findById(id);
+    public Employee update(Long id, Employee data) {
+        Employee c = findById(id);
         c.setName(data.getName());
         c.setEmail(data.getEmail());
         return repo.save(c);
@@ -60,14 +60,14 @@ public class ClientService {
 
     /** Marca un cliente como INACTIVO */
     public void inactivate(Long id) {
-        Client c = findById(id);
+        Employee c = findById(id);
         c.setEstado("INACTIVO");
         repo.save(c);
     }
 
     /** Marca un cliente como ACTIVO */
     public void activate(Long id) {
-        Client c = findById(id);
+        Employee c = findById(id);
         c.setEstado("ACTIVO");
         repo.save(c);
     }

@@ -1,7 +1,7 @@
 // src/main/java/grupo5/gestion_inventario/clientpanel/model/Provider.java
 package grupo5.gestion_inventario.clientpanel.model;
 
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -31,7 +31,7 @@ public class Provider {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    private Employee client;
 
     /** Constructor por defecto */
     public Provider() {}
@@ -46,7 +46,7 @@ public class Provider {
     public Provider(String name,
                     String contactInfo,
                     String paymentTerms,
-                    Client client) {
+                    Employee client) {
         this.name         = name;
         this.contactInfo  = contactInfo;
         this.paymentTerms = paymentTerms;
@@ -88,10 +88,10 @@ public class Provider {
         this.createdAt = createdAt;
     }
 
-    public Client getClient() {
+    public Employee getClient() {
         return client;
     }
-    public void setClient(Client client) {
+    public void setClient(Employee client) {
         this.client = client;
     }
 }

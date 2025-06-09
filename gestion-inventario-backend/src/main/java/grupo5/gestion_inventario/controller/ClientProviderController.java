@@ -3,8 +3,8 @@ package grupo5.gestion_inventario.controller;
 
 import grupo5.gestion_inventario.clientpanel.dto.ProviderRequest;
 import grupo5.gestion_inventario.clientpanel.model.Provider;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.service.ProviderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,35 +19,35 @@ import java.util.List;
 public class ClientProviderController {
 
     private final ProviderService providerService;
-    private final ClientRepository clientRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public ClientProviderController(ProviderService providerService, ClientRepository clientRepository) {
+    public ClientProviderController(ProviderService providerService, EmployeeRepository employeeRepository) {
         this.providerService = providerService;
-        this.clientRepository = clientRepository;
+        this.employeeRepository = employeeRepository;
     }
 
-    private Client getAuthenticatedClient(Authentication auth) {
-        return clientRepository.findByEmail(auth.getName())
+    private Employee getAuthenticatedClient(Authentication auth) {
+        return employeeRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Cliente no autenticado"));
     }
 
     @GetMapping
     public ResponseEntity<List<Provider>> listProviders(Authentication auth) {
-        Client client = getAuthenticatedClient(auth);
+        Employee client = getAuthenticatedClient(auth);
         List<Provider> providers = providerService.findByClientId(client.getId());
         return ResponseEntity.ok(providers);
     }
 
     @PostMapping
     public ResponseEntity<Provider> createProvider(@RequestBody ProviderRequest request, Authentication auth) {
-        Client client = getAuthenticatedClient(auth);
+        Employee client = getAuthenticatedClient(auth);
         Provider createdProvider = providerService.create(client, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProvider);
     }
 
     @GetMapping("/{providerId}")
     public ResponseEntity<Provider> getProviderById(@PathVariable Long providerId, Authentication auth) {
-        Client client = getAuthenticatedClient(auth);
+        Employee client = getAuthenticatedClient(auth);
         return providerService.findByIdAndClient(providerId, client)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -55,7 +55,7 @@ public class ClientProviderController {
 
     @PutMapping("/{providerId}")
     public ResponseEntity<Provider> updateProvider(@PathVariable Long providerId, @RequestBody ProviderRequest request, Authentication auth) {
-        Client client = getAuthenticatedClient(auth);
+        Employee client = getAuthenticatedClient(auth);
         return providerService.update(providerId, request, client)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -63,7 +63,7 @@ public class ClientProviderController {
 
     @DeleteMapping("/{providerId}")
     public ResponseEntity<Void> deleteProvider(@PathVariable Long providerId, Authentication auth) {
-        Client client = getAuthenticatedClient(auth);
+        Employee client = getAuthenticatedClient(auth);
         if (providerService.delete(providerId, client)) {
             return ResponseEntity.noContent().build();
         }
@@ -77,8 +77,8 @@ public class ClientProviderController {
 
 import grupo5.gestion_inventario.clientpanel.dto.ProviderRequest;
 import grupo5.gestion_inventario.clientpanel.model.Provider;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.service.ProviderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,15 +90,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client/providers")
-@PreAuthorize("hasRole('CLIENT')")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class ClientProviderController {
 
     private final ProviderService providerService;
-    private final ClientRepository clientRepository;
+    private final EmployeeRepository employeeRepository;
 
-    public ClientProviderController(ProviderService providerService, ClientRepository clientRepository) {
+    public ClientProviderController(ProviderService providerService, EmployeeRepository employeeRepository) {
         this.providerService = providerService;
-        this.clientRepository = clientRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     /**
@@ -107,7 +107,7 @@ public class ClientProviderController {
 
     @PostMapping
     public ResponseEntity<Provider> createProvider(@RequestBody ProviderRequest request, Authentication auth) {
-        Client client = clientRepository.findByEmail(auth.getName())
+        Employee client = employeeRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
         Provider createdProvider = providerService.create(client, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProvider);
@@ -119,7 +119,7 @@ public class ClientProviderController {
 
     @GetMapping
     public ResponseEntity<List<Provider>> getProviders(Authentication auth) {
-        Client client = clientRepository.findByEmail(auth.getName())
+        Employee client = employeeRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
         List<Provider> providers = providerService.findByClientId(client.getId());
         return ResponseEntity.ok(providers);
@@ -131,7 +131,7 @@ public class ClientProviderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Provider> getProviderById(@PathVariable Long id, Authentication auth) {
-        Client client = clientRepository.findByEmail(auth.getName())
+        Employee client = employeeRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
         return providerService.findByIdAndClient(id, client)
                 .map(ResponseEntity::ok)
@@ -143,7 +143,7 @@ public class ClientProviderController {
      * Actualiza un proveedor existente.
     @PutMapping("/{id}")
     public ResponseEntity<Provider> updateProvider(@PathVariable Long id, @RequestBody ProviderRequest request, Authentication auth) {
-        Client client = clientRepository.findByEmail(auth.getName())
+        Employee client = employeeRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
         return providerService.update(id, request, client)
                 .map(ResponseEntity::ok)
@@ -156,7 +156,7 @@ public class ClientProviderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProvider(@PathVariable Long id, Authentication auth) {
-        Client client = clientRepository.findByEmail(auth.getName())
+        Employee client = employeeRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
         boolean deleted = providerService.delete(id, client);
         if (deleted) {

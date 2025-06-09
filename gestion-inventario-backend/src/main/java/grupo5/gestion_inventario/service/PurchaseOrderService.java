@@ -9,9 +9,9 @@ import grupo5.gestion_inventario.clientpanel.model.StockMovement;
 import grupo5.gestion_inventario.clientpanel.repository.ProviderRepository;
 import grupo5.gestion_inventario.clientpanel.repository.PurchaseOrderRepository;
 import grupo5.gestion_inventario.clientpanel.repository.StockMovementRepository;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import grupo5.gestion_inventario.model.Product;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class PurchaseOrderService {
     private ProductRepository productRepository;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private StockMovementRepository stockMovementRepository;
@@ -57,7 +57,7 @@ public class PurchaseOrderService {
         // 1. Validar la existencia de las entidades principales
         Provider provider = providerRepository.findById(request.getProviderId())
                 .orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado con id: " + request.getProviderId()));
-        Client client = clientRepository.findById(request.getClientId())
+        Employee client = employeeRepository.findById(request.getClientId())
                 .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con id: " + request.getClientId()));
 
         // 2. Crear la entidad PurchaseOrder

@@ -11,19 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import grupo5.gestion_inventario.clientpanel.model.CashRegisterSession;
 import grupo5.gestion_inventario.clientpanel.repository.CashRegisterSessionRepository;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 
 @Service
 public class CashRegisterSessionService {
 
     private final CashRegisterSessionRepository sessionRepo;
-    private final ClientRepository clientRepo;
+    private final EmployeeRepository employeeRepo;
 
     public CashRegisterSessionService(CashRegisterSessionRepository sessionRepo,
-                                      ClientRepository clientRepo) {
+                                      EmployeeRepository employeeRepo) {
         this.sessionRepo = sessionRepo;
-        this.clientRepo  = clientRepo;
+        this.employeeRepo  = employeeRepo;
     }
 
     /**
@@ -31,7 +31,7 @@ public class CashRegisterSessionService {
      */
     @Transactional
     public CashRegisterSession openSession(Long clientId, BigDecimal openingBalance) {
-        Client client = clientRepo.findById(clientId)
+        Employee client = employeeRepo.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + clientId));
 
         Optional<CashRegisterSession> open = sessionRepo.findByClientIdAndClosedAtIsNull(clientId);
@@ -68,7 +68,7 @@ public class CashRegisterSessionService {
      */
     @Transactional(readOnly = true)
     public List<CashRegisterSession> listSessions(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return sessionRepo.findByClientId(clientId);

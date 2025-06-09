@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.clientpanel.model.Expense;
 import grupo5.gestion_inventario.clientpanel.repository.ExpenseRepository;
 
@@ -15,12 +15,12 @@ import grupo5.gestion_inventario.clientpanel.repository.ExpenseRepository;
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepo;
-    private final ClientRepository  clientRepo;
+    private final EmployeeRepository  employeeRepo;
 
     public ExpenseService(ExpenseRepository expenseRepo,
-                          ClientRepository clientRepo) {
+                          EmployeeRepository employeeRepo) {
         this.expenseRepo = expenseRepo;
-        this.clientRepo  = clientRepo;
+        this.employeeRepo  = employeeRepo;
     }
 
     /**
@@ -28,7 +28,7 @@ public class ExpenseService {
      */
     @Transactional
     public Expense create(Long clientId, Expense expense) {
-        Client client = clientRepo.findById(clientId)
+        Employee client = employeeRepo.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + clientId));
         expense.setClient(client);
         return expenseRepo.save(expense);
@@ -39,7 +39,7 @@ public class ExpenseService {
      */
     @Transactional(readOnly = true)
     public List<Expense> findByClientId(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return expenseRepo.findByClientId(clientId);

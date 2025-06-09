@@ -1,8 +1,8 @@
 /*package grupo5.gestion_inventario.controller;
 
 import grupo5.gestion_inventario.clientpanel.dto.ClientCreateRequest;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/clients")
 public class ClientController {
 
-    private final ClientRepository   clientRepo;
+    private final EmployeeRepository   employeeRepo;
     private final PasswordEncoder    passwordEncoder;
 
-    public ClientController(ClientRepository clientRepo,
+    public ClientController(EmployeeRepository employeeRepo,
                             PasswordEncoder passwordEncoder) {
-        this.clientRepo      = clientRepo;
+        this.employeeRepo      = employeeRepo;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Client> create(@RequestBody ClientCreateRequest req) {
+    public ResponseEntity<Employee> create(@RequestBody ClientCreateRequest req) {
         // 1) Construimos la entidad usando los campos correctos
-        Client c = new Client();
+        Employee c = new Employee();
         c.setName(req.getName());
         c.setEmail(req.getEmail());
         // ── Hasheamos en BCrypt y guardamos en passwordHash ──
@@ -39,7 +39,7 @@ public class ClientController {
         c.setEstado(req.getEstado().toUpperCase());
 
         // 2) Persistimos
-        Client saved = clientRepo.save(c);
+        Employee saved = employeeRepo.save(c);
 
         // 3) Respondemos con CREATED
         return ResponseEntity
