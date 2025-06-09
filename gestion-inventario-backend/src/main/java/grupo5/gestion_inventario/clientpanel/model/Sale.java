@@ -2,6 +2,7 @@ package grupo5.gestion_inventario.clientpanel.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.clientpanel.model.EndCustomer;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,6 +30,10 @@ public class Sale {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "end_customer_id")
+    private EndCustomer endCustomer;
+
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<SaleItem> items = new ArrayList<>();
@@ -49,6 +54,7 @@ public class Sale {
     public Sale(String paymentMethod,
                 BigDecimal totalAmount,
                 Client client,
+                EndCustomer endCustomer,
                 List<SaleItem> items,
                 LocalDateTime saleDate) { // <-- PARÁMETRO AÑADIDO
         // Usa la fecha recibida. Si es nula, usa la actual como respaldo.
@@ -56,6 +62,7 @@ public class Sale {
         this.paymentMethod = paymentMethod;
         this.totalAmount   = totalAmount != null ? totalAmount : BigDecimal.ZERO;
         this.client        = client;
+        this.endCustomer   = endCustomer;
         if (items != null) {
             setItems(items);
         }
@@ -75,6 +82,9 @@ public class Sale {
 
     public Client getClient()               { return client; }
     public void setClient(Client client)    { this.client = client; }
+
+    public EndCustomer getEndCustomer() { return endCustomer; }
+    public void setEndCustomer(EndCustomer endCustomer) { this.endCustomer = endCustomer; }
 
     public List<SaleItem> getItems()        { return items; }
 
@@ -115,10 +125,10 @@ public class Sale {
      * @param paymentMethod El método de pago.
      * @param saleDate La fecha de la venta (puede ser nula, en cuyo caso se usa la actual).
      */
-    public Sale(Client client, String paymentMethod, LocalDateTime saleDate) {
+    public Sale(Client client, EndCustomer endCustomer, String paymentMethod, LocalDateTime saleDate) {
         this.client = client;
+        this.endCustomer = endCustomer;
         this.paymentMethod = paymentMethod;
-        // Usa la fecha recibida. Si es nula, usa la fecha/hora actual como respaldo.
         this.createdAt = (saleDate != null) ? saleDate : LocalDateTime.now();
         this.totalAmount = BigDecimal.ZERO;
     }

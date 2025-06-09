@@ -6,7 +6,9 @@ import grupo5.gestion_inventario.clientpanel.dto.SaleRequest;
 import grupo5.gestion_inventario.clientpanel.dto.SalesDailySummaryDto;
 import grupo5.gestion_inventario.clientpanel.model.Sale;
 import grupo5.gestion_inventario.clientpanel.model.SaleItem;
+import grupo5.gestion_inventario.clientpanel.model.EndCustomer;
 import grupo5.gestion_inventario.clientpanel.repository.SaleRepository;
+import grupo5.gestion_inventario.clientpanel.repository.EndCustomerRepository;
 import grupo5.gestion_inventario.model.Client;
 import grupo5.gestion_inventario.model.Product;
 import grupo5.gestion_inventario.repository.ClientRepository;
@@ -28,13 +30,16 @@ public class SalesService {
     private final SaleRepository saleRepo;
     private final ClientRepository  clientRepo;
     private final ProductRepository productRepo;
+    private final EndCustomerRepository endCustomerRepo;
 
     public SalesService(SaleRepository saleRepo,
                         ClientRepository clientRepo,
-                        ProductRepository productRepo) {
+                        ProductRepository productRepo,
+                        EndCustomerRepository endCustomerRepo) {
         this.saleRepo    = saleRepo;
         this.clientRepo  = clientRepo;
         this.productRepo = productRepo;
+        this.endCustomerRepo = endCustomerRepo;
     }
 
     /* ─────────────────── NUEVA VENTA (CORREGIDO PARA TU CONTROLADOR) ─────────────────── */
@@ -48,7 +53,14 @@ public class SalesService {
                 .orElseThrow(() ->
                         new IllegalArgumentException("Cliente no encontrado: " + clientId));
 
-        Sale sale = new Sale(client, req.getPaymentMethod(), req.getSaleDate());
+        EndCustomer endCustomer = null;
+        if (req.getEndCustomerId() != null) {
+            endCustomer = endCustomerRepo.findById(req.getEndCustomerId())
+                    .filter(c -> c.getClient().getId().equals(clientId))
+                    .orElseThrow(() -> new IllegalArgumentException("Cliente final no encontrado"));
+        }
+
+        Sale sale = new Sale(client, endCustomer, req.getPaymentMethod(), req.getSaleDate());
 
         req.getItems().forEach(itemRequest -> {
             Product product = productRepo.findById(itemRequest.getProductId())
@@ -113,6 +125,7 @@ public class SalesService {
     private SaleDto toDto(Sale s) {
         return new SaleDto(
                 s.getClient().getName(),
+                s.getEndCustomer() != null ? s.getEndCustomer().getName() : "",
                 s.getItems().isEmpty()
                         ? ""
                         : s.getItems().get(0).getProduct().getName(),

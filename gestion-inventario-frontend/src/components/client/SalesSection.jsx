@@ -47,6 +47,7 @@ function SalesSection() {
                 <thead>
                 <tr>
                     <th>Cliente</th>
+                    <th>Comprador</th>
                     <th>Artículo</th>
                     <th>Cantidad</th>
                     <th>Precio Total</th>
@@ -58,6 +59,7 @@ function SalesSection() {
                 {sales.map((sale, index) => (
                     <tr key={index}> {/* Usamos index como key si no hay un ID único por venta en el DTO */}
                         <td>{sale.clientName}</td>
+                        <td>{sale.endCustomerName}</td>
                         <td>{sale.itemName}</td>
                         <td>{sale.quantity}</td>
                         <td>${sale.price}</td>
