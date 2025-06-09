@@ -86,17 +86,18 @@ public class SalesService {
 
         Sale saved = saleRepo.save(sale);
 
-        String itemNames = saved.getItems().stream()
-                .map(i -> i.getProduct().getName())
-                .collect(Collectors.joining(", "));
-        int totalQty = saved.getItems().stream()
-                .mapToInt(SaleItem::getQuantity)
-                .sum();
+        String firstItemName = saved.getItems().isEmpty()
+                ? ""
+                : saved.getItems().get(0).getProduct().getName();
+        int firstItemQty = saved.getItems().isEmpty()
+                ? 0
+                : saved.getItems().get(0).getQuantity();
 
         return new SaleDto(
-                client.getName(),
-                itemNames,
-                totalQty,
+                account.getName(),
+                endCustomer != null ? endCustomer.getName() : "",
+                firstItemName,
+                firstItemQty,
                 saved.getTotalAmount(),
                 saved.getPaymentMethod(),
                 saved.getCreatedAt()
