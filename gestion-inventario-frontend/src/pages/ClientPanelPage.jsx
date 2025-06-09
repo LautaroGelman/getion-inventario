@@ -5,6 +5,7 @@ import DashboardSection from '../components/client/DashboardSection';
 import InventorySection from '../components/client/InventorySection';
 import SalesSection from '../components/client/SalesSection';
 import ProvidersSection from '../components/client/ProvidersSection';
+import PurchasesSection from '../components/client/PurchasesSection';
 
 function ClientPanelPage() {
     const navigate = useNavigate();
@@ -37,6 +38,8 @@ function ClientPanelPage() {
                 return <InventorySection />;
             case 'ventas':
                 return <SalesSection />;
+            case 'compras':
+                return <PurchasesSection />;
             case 'proveedores':
                 return <ProvidersSection />;
             case 'dashboard':
@@ -54,6 +57,7 @@ function ClientPanelPage() {
                     <button onClick={() => handleSectionChange('dashboard')}>Dashboard</button>
                     <button onClick={() => handleSectionChange('inventario')}>Inventario</button>
                     <button onClick={() => handleSectionChange('ventas')}>Ventas</button>
+                    <button onClick={() => handleSectionChange('compras')}>Compras</button>
                     <button onClick={() => handleSectionChange('proveedores')}>Proveedores</button>
                     <button id="logout-btn" onClick={handleLogout}>Cerrar sesión</button>
                 </nav>

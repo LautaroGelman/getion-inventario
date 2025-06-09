@@ -17,7 +17,6 @@ function ArticleFormPage() {
         price: 0,
     });
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(isEditing);
 
     useEffect(() => {
         if (isEditing) {
@@ -34,8 +33,7 @@ function ArticleFormPage() {
                 })
                 // --- ¡CORRECCIÓN AQUÍ! ---
                 // Usamos el mensaje del error capturado.
-                .catch(err => setError(err.message || 'No se pudieron cargar los datos del artículo.'))
-                .finally(() => setLoading(false));
+                .catch(err => setError(err.message || 'No se pudieron cargar los datos del artículo.'));
         }
     }, [productId, isEditing]);
 

@@ -27,7 +27,7 @@ function ProviderFormPage() {
                         paymentTerms: provider.paymentTerms,
                     });
                 })
-                .catch(err => setError('No se pudieron cargar los datos del proveedor.'))
+                .catch(err => setError(err.message || 'No se pudieron cargar los datos del proveedor.'))
                 .finally(() => setLoading(false));
         }
     }, [providerId, isEditing]);
