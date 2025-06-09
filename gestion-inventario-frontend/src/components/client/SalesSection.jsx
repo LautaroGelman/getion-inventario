@@ -29,6 +29,10 @@ function SalesSection() {
         navigate('/form-venta'); // Iremos a esta ruta en el siguiente paso
     };
 
+    const handleNewReturn = () => {
+        navigate('/form-devolucion');
+    };
+
     if (loading) {
         return <div>Cargando ventas...</div>;
     }
@@ -41,7 +45,10 @@ function SalesSection() {
         <div className="sales-section">
             <div className="section-header">
                 <h2>Ventas</h2>
-                <button className="btn-new" onClick={handleNewSale}>Registrar nueva venta</button>
+                <div>
+                    <button className="btn-new" onClick={handleNewSale}>Registrar nueva venta</button>
+                    <button className="btn-new" onClick={handleNewReturn}>Registrar devolución</button>
+                </div>
             </div>
             <table>
                 <thead>

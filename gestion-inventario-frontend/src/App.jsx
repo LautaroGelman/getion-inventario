@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ClientPanelPage from './pages/ClientPanelPage';
 import ArticleFormPage from './pages/ArticleFormPage';
 import SaleFormPage from './pages/SaleFormPage';
+import SaleReturnFormPage from './pages/SaleReturnFormPage';
 import ProviderFormPage from './pages/ProviderFormPage';
 import AdminPanelPage from './pages/AdminPanelPage';
 import ClientFormPage from "./pages/ClientFormPage.jsx"; // <-- IMPORTAMOS
@@ -22,6 +23,7 @@ function App() {
             <Route path="/form-articulo" element={<ProtectedRoute><ArticleFormPage /></ProtectedRoute>} />
             <Route path="/form-articulo/:productId" element={<ProtectedRoute><ArticleFormPage /></ProtectedRoute>} />
             <Route path="/form-venta" element={<ProtectedRoute><SaleFormPage /></ProtectedRoute>} />
+            <Route path="/form-devolucion" element={<ProtectedRoute><SaleReturnFormPage /></ProtectedRoute>} />
             <Route path="/form-proveedor" element={<ProtectedRoute><ProviderFormPage /></ProtectedRoute>} />
             <Route path="/form-proveedor/:providerId" element={<ProtectedRoute><ProviderFormPage /></ProtectedRoute>} />
             {/* --- NUEVA RUTA PARA EL FORMULARIO DE CLIENTE --- */}
