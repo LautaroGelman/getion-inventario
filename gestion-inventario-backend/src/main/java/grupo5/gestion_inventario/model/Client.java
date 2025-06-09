@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import grupo5.gestion_inventario.model.Role;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,6 +26,10 @@ public class Client {
 
     @Column(nullable = false)
     private String passwordHash;                // SIEMPRE BCrypt
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     /* -------- info extra -------- */
     private String telefono;
@@ -49,6 +55,9 @@ public class Client {
 
     public String getPasswordHash()  { return passwordHash; }
     public void   setPasswordHash(String p) { this.passwordHash = p; }
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
     public String getTelefono()      { return telefono; }
     public void   setTelefono(String t){ this.telefono = t; }

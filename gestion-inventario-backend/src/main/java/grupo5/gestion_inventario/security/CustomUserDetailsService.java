@@ -1,6 +1,7 @@
 package grupo5.gestion_inventario.security;
 
 import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Role;
 import grupo5.gestion_inventario.repository.ClientRepository;
 import grupo5.gestion_inventario.superpanel.model.AdminUser;
 import grupo5.gestion_inventario.superpanel.repository.AdminUserRepository;
@@ -44,10 +45,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .orElse(null));
 
         if (client != null) {
+            String role = client.getRole() != null ? client.getRole().name() : "CLIENT";
             return User.builder()
                     .username(client.getEmail())      // clave del JWT
                     .password(client.getPasswordHash())
-                    .roles("CLIENT")
+                    .roles(role)
                     .build();
         }
 

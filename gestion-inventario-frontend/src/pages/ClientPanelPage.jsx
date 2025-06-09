@@ -7,10 +7,12 @@ import SalesSection from '../components/client/SalesSection';
 import ProvidersSection from '../components/client/ProvidersSection';
 import PurchasesSection from '../components/client/PurchasesSection';
 import CustomersSection from '../components/client/CustomersSection';
+import EmployeesSection from '../components/client/EmployeesSection';
 
 function ClientPanelPage() {
     const navigate = useNavigate();
     const location = useLocation(); // Hook para leer la info de la URL actual
+    const role = localStorage.getItem('role');
 
     // La sección activa ahora se determina por el HASH de la URL, o es 'dashboard' por defecto
     const [activeSection, setActiveSection] = useState(location.hash.replace('#', '') || 'dashboard');
@@ -25,6 +27,7 @@ function ClientPanelPage() {
     const handleLogout = () => {
         localStorage.removeItem('jwt');
         localStorage.removeItem('clientId');
+        localStorage.removeItem('role');
         navigate('/login');
     };
 
@@ -45,6 +48,8 @@ function ClientPanelPage() {
                 return <CustomersSection />;
             case 'proveedores':
                 return <ProvidersSection />;
+            case 'empleados':
+                return <EmployeesSection />;
             case 'dashboard':
             default:
                 return <DashboardSection />;
@@ -58,11 +63,16 @@ function ClientPanelPage() {
                 <nav>
                     {/* Los botones ahora llaman a handleSectionChange para actualizar la URL */}
                     <button onClick={() => handleSectionChange('dashboard')}>Dashboard</button>
-                    <button onClick={() => handleSectionChange('inventario')}>Inventario</button>
+                    {role === 'ADMIN' && (
+                        <>
+                            <button onClick={() => handleSectionChange('inventario')}>Inventario</button>
+                            <button onClick={() => handleSectionChange('compras')}>Compras</button>
+                            <button onClick={() => handleSectionChange('proveedores')}>Proveedores</button>
+                            <button onClick={() => handleSectionChange('empleados')}>Empleados</button>
+                        </>
+                    )}
                     <button onClick={() => handleSectionChange('ventas')}>Ventas</button>
-                    <button onClick={() => handleSectionChange('compras')}>Compras</button>
                     <button onClick={() => handleSectionChange('clientes')}>Clientes</button>
-                    <button onClick={() => handleSectionChange('proveedores')}>Proveedores</button>
                     <button id="logout-btn" onClick={handleLogout}>Cerrar sesión</button>
                 </nav>
             </header>
