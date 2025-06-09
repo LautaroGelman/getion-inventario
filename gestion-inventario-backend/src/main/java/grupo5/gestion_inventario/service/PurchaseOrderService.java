@@ -43,8 +43,8 @@ public class PurchaseOrderService {
     private StockMovementRepository stockMovementRepository;
 
     @Transactional(readOnly = true)
-    public List<PurchaseOrder> getAllPurchaseOrders() {
-        return purchaseOrderRepository.findAll();
+    public List<PurchaseOrder> getAllPurchaseOrders(Long clientId) {
+        return purchaseOrderRepository.findByClientId(clientId);
     }
 
     @Transactional(readOnly = true)
