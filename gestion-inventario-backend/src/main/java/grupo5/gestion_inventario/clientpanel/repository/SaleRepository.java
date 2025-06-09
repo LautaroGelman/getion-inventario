@@ -16,19 +16,19 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     /**
      * Ventas históricas de un cliente (para tabla)
      */
-    List<Sale> findByClientId(Long clientId);
+    List<Sale> findByBusinessAccountId(Long businessAccountId);
 
     /**
      * Número de ventas de un cliente entre dos instantes
      */
     @Query("""
         SELECT COUNT(s) FROM Sale s
-        WHERE s.client.id  = :clientId
+        WHERE s.businessAccount.id  = :accountId
           AND s.createdAt >= :from
           AND s.createdAt <  :to
     """)
     long countBetween(
-            @Param("clientId") Long clientId,
+            @Param("accountId") Long accountId,
             @Param("from")     LocalDateTime from,
             @Param("to")       LocalDateTime to
     );
@@ -38,11 +38,11 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
      */
     @Query("""
         SELECT COALESCE(SUM(s.totalAmount), 0) FROM Sale s
-        WHERE s.client.id  = :clientId
+        WHERE s.businessAccount.id  = :accountId
           AND s.createdAt >= :since
     """)
     BigDecimal totalRevenueSinceClient(
-            @Param("clientId") Long clientId,
+            @Param("accountId") Long accountId,
             @Param("since")    LocalDateTime since
     );
 
@@ -62,13 +62,13 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
       COUNT(*)                      AS ventas,
       COALESCE(SUM(total_amount),0) AS importe
     FROM sale
-    WHERE client_id = :clientId
+    WHERE business_account_id = :accountId
       AND created_at >= :startDate
     GROUP BY fecha
     ORDER BY fecha
     """, nativeQuery = true)
     List<Object[]> findDailySummaryNative(
-            @Param("clientId")  Long clientId,
+            @Param("accountId")  Long accountId,
             @Param("startDate") LocalDateTime startDate);
 
     // --- ¡NUEVO MÉTODO AÑADIDO AQUÍ! ---
@@ -88,12 +88,12 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     FROM sale s
     JOIN sale_item si ON s.id = si.sale_id
     JOIN product p ON si.product_id = p.id
-    WHERE s.client_id = :clientId AND s.created_at >= :startDate
+    WHERE s.business_account_id = :accountId AND s.created_at >= :startDate
     GROUP BY sale_date
     ORDER BY sale_date
     """, nativeQuery = true)
     List<Object[]> findDailyProfitabilitySummaryNative(
-            @Param("clientId") Long clientId,
+            @Param("accountId") Long accountId,
             @Param("startDate") LocalDateTime startDate
     );
 }

@@ -2,6 +2,8 @@ package grupo5.gestion_inventario.model;
 
 import jakarta.persistence.*;
 
+/** Employee belonging to a business account */
+
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -24,8 +26,8 @@ public class Employee {
     private EmployeeRole role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    @JoinColumn(name = "business_account_id", nullable = false)
+    private BusinessAccount businessAccount;
 
     public Long getId() {
         return id;
@@ -63,11 +65,12 @@ public class Employee {
         this.role = role;
     }
 
-    public Client getClient() {
-        return client;
+    public BusinessAccount getBusinessAccount() {
+        return businessAccount;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setBusinessAccount(BusinessAccount businessAccount) {
+        this.businessAccount = businessAccount;
     }
 }
+

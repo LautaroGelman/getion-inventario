@@ -9,9 +9,9 @@ import grupo5.gestion_inventario.clientpanel.model.StockMovement;
 import grupo5.gestion_inventario.clientpanel.repository.ProviderRepository;
 import grupo5.gestion_inventario.clientpanel.repository.PurchaseOrderRepository;
 import grupo5.gestion_inventario.clientpanel.repository.StockMovementRepository;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.BusinessAccount;
 import grupo5.gestion_inventario.model.Product;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.BusinessAccountRepository;
 import grupo5.gestion_inventario.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +37,14 @@ public class PurchaseOrderService {
     private ProductRepository productRepository;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private BusinessAccountRepository businessAccountRepository;
 
     @Autowired
     private StockMovementRepository stockMovementRepository;
 
     @Transactional(readOnly = true)
-    public List<PurchaseOrder> getAllPurchaseOrders(Long clientId) {
-        return purchaseOrderRepository.findByClientId(clientId);
+    public List<PurchaseOrder> getAllPurchaseOrders(Long accountId) {
+        return purchaseOrderRepository.findByBusinessAccountId(accountId);
     }
 
     @Transactional(readOnly = true)
@@ -57,13 +57,13 @@ public class PurchaseOrderService {
         // 1. Validar la existencia de las entidades principales
         Provider provider = providerRepository.findById(request.getProviderId())
                 .orElseThrow(() -> new EntityNotFoundException("Proveedor no encontrado con id: " + request.getProviderId()));
-        Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con id: " + request.getClientId()));
+        BusinessAccount account = businessAccountRepository.findById(request.getClientId())
+                .orElseThrow(() -> new EntityNotFoundException("BusinessAccount no encontrado con id: " + request.getClientId()));
 
         // 2. Crear la entidad PurchaseOrder
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         purchaseOrder.setProvider(provider);
-        purchaseOrder.setClient(client);
+        purchaseOrder.setBusinessAccount(account);
 
         // 3. Procesar los ítems de la orden y calcular el costo total
         List<PurchaseOrderItem> items = new ArrayList<>();

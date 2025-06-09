@@ -1,7 +1,7 @@
 package grupo5.gestion_inventario.clientpanel.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.BusinessAccount;
 import grupo5.gestion_inventario.clientpanel.model.EndCustomer;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -27,8 +27,8 @@ public class Sale {
     private BigDecimal totalAmount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    @JoinColumn(name = "business_account_id", nullable = false)
+    private BusinessAccount businessAccount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "end_customer_id")
@@ -53,7 +53,7 @@ public class Sale {
      */
     public Sale(String paymentMethod,
                 BigDecimal totalAmount,
-                Client client,
+                BusinessAccount businessAccount,
                 EndCustomer endCustomer,
                 List<SaleItem> items,
                 LocalDateTime saleDate) { // <-- PARÁMETRO AÑADIDO
@@ -61,7 +61,7 @@ public class Sale {
         this.createdAt     = (saleDate != null) ? saleDate : LocalDateTime.now();
         this.paymentMethod = paymentMethod;
         this.totalAmount   = totalAmount != null ? totalAmount : BigDecimal.ZERO;
-        this.client        = client;
+        this.businessAccount        = businessAccount;
         this.endCustomer   = endCustomer;
         if (items != null) {
             setItems(items);
@@ -80,8 +80,8 @@ public class Sale {
     public BigDecimal getTotalAmount()      { return totalAmount; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
 
-    public Client getClient()               { return client; }
-    public void setClient(Client client)    { this.client = client; }
+    public BusinessAccount getBusinessAccount()               { return businessAccount; }
+    public void setBusinessAccount(BusinessAccount businessAccount)    { this.businessAccount = businessAccount; }
 
     public EndCustomer getEndCustomer() { return endCustomer; }
     public void setEndCustomer(EndCustomer endCustomer) { this.endCustomer = endCustomer; }
@@ -125,8 +125,8 @@ public class Sale {
      * @param paymentMethod El método de pago.
      * @param saleDate La fecha de la venta (puede ser nula, en cuyo caso se usa la actual).
      */
-    public Sale(Client client, EndCustomer endCustomer, String paymentMethod, LocalDateTime saleDate) {
-        this.client = client;
+    public Sale(BusinessAccount businessAccount, EndCustomer endCustomer, String paymentMethod, LocalDateTime saleDate) {
+        this.businessAccount = businessAccount;
         this.endCustomer = endCustomer;
         this.paymentMethod = paymentMethod;
         this.createdAt = (saleDate != null) ? saleDate : LocalDateTime.now();

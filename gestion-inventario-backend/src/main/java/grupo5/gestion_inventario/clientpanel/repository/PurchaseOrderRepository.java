@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long> {
     // Permite obtener las órdenes de compra asociadas a un cliente específico
-    List<PurchaseOrder> findByClientId(Long clientId);
+    List<PurchaseOrder> findByBusinessAccountId(Long businessAccountId);
 }
