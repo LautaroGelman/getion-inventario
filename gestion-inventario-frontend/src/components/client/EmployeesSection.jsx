@@ -5,13 +5,19 @@ import { api } from '../../services/api';
 function EmployeesSection() {
     const [employees, setEmployees] = useState([]);
 
+    const load = async () => {
+        const data = await api.get('/client/employees');
+        setEmployees(data);
+    };
+
     useEffect(() => {
-        const load = async () => {
-            const data = await api.get('/client/employees');
-            setEmployees(data);
-        };
         load();
     }, []);
+
+    const handleDelete = async (id) => {
+        await api.delete(`/client/employees/${id}`);
+        load();
+    };
 
     return (
         <div>
@@ -19,7 +25,10 @@ function EmployeesSection() {
             <Link to="/empleados/nuevo">Nuevo Empleado</Link>
             <ul>
                 {employees.map((e) => (
-                    <li key={e.id}>{e.name} - {e.role}</li>
+                    <li key={e.id}>
+                        {e.name} - {e.role}
+                        <button onClick={() => handleDelete(e.id)}>Eliminar</button>
+                    </li>
                 ))}
             </ul>
         </div>
