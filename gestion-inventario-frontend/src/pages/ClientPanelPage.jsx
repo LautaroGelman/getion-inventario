@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; // <-- AÑADIMOS useLocation
+import { useNavigate, useLocation } from 'react-router-dom';
 import './ClientPanelPage.css';
 import DashboardSection from '../components/client/DashboardSection';
 import InventorySection from '../components/client/InventorySection';
@@ -8,11 +8,12 @@ import ProvidersSection from '../components/client/ProvidersSection';
 import PurchasesSection from '../components/client/PurchasesSection';
 import CustomersSection from '../components/client/CustomersSection';
 import EmployeesSection from '../components/client/EmployeesSection';
+import { api } from '../services/api';
 
 function ClientPanelPage() {
     const navigate = useNavigate();
-    const location = useLocation(); // Hook para leer la info de la URL actual
-    const role = localStorage.getItem('role');
+    const location = useLocation();
+    const [role, setRole] = useState(localStorage.getItem('role'));
 
     // La sección activa ahora se determina por el HASH de la URL, o es 'dashboard' por defecto
     const [activeSection, setActiveSection] = useState(location.hash.replace('#', '') || 'dashboard');
@@ -22,6 +23,22 @@ function ClientPanelPage() {
         const currentHash = location.hash.replace('#', '');
         setActiveSection(currentHash || 'dashboard');
     }, [location.hash]);
+
+    // Obtiene el rol desde el backend para mantener la sesión actualizada
+    useEffect(() => {
+        async function fetchRole() {
+            try {
+                const data = await api.get('/auth/me');
+                if (data && data.role) {
+                    localStorage.setItem('role', data.role);
+                    setRole(data.role);
+                }
+            } catch (err) {
+                console.error('Error obteniendo rol:', err);
+            }
+        }
+        fetchRole();
+    }, []);
 
 
     const handleLogout = () => {
@@ -63,7 +80,7 @@ function ClientPanelPage() {
                 <nav>
                     {/* Los botones ahora llaman a handleSectionChange para actualizar la URL */}
                     <button onClick={() => handleSectionChange('dashboard')}>Dashboard</button>
-                    {role === 'ADMIN' && (
+                    {role === 'MANAGER' && (
                         <>
                             <button onClick={() => handleSectionChange('inventario')}>Inventario</button>
                             <button onClick={() => handleSectionChange('compras')}>Compras</button>

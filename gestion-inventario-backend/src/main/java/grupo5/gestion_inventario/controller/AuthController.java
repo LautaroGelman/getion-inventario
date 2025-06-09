@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,7 +58,11 @@ public class AuthController {
 
         String username = authentication.getName();
         String token;
-        String role = roles.isEmpty() ? null : roles.get(0).replace("ROLE_", "");
+        String role = roles.stream()
+                .filter(r -> !r.equals("ROLE_CLIENT"))
+                .findFirst()
+                .orElse(roles.isEmpty() ? null : roles.get(0))
+                .replace("ROLE_", "");
 
         // 3) Si es ROLE_CLIENT, busco el clientId y uso generateToken con clientId
         if (roles.contains("ROLE_CLIENT")) {
@@ -73,5 +78,19 @@ public class AuthController {
         }
 
         return new AuthResponse(token, role);
+    }
+
+    /**
+     * Devuelve la información del usuario autenticado.
+     */
+    @GetMapping("/me")
+    public ResponseEntity<AuthResponse> me(Authentication auth) {
+        String role = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(r -> !r.equals("ROLE_CLIENT") && !r.equals("ROLE_ADMIN"))
+                .findFirst()
+                .orElse("ROLE_CLIENT")
+                .replace("ROLE_", "");
+        return ResponseEntity.ok(new AuthResponse(null, role));
     }
 }

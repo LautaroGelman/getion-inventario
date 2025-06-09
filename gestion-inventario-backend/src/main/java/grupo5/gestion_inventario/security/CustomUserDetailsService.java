@@ -1,8 +1,11 @@
 package grupo5.gestion_inventario.security;
 
 import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.model.EmployeeRole;
 import grupo5.gestion_inventario.model.Role;
 import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.superpanel.model.AdminUser;
 import grupo5.gestion_inventario.superpanel.repository.AdminUserRepository;
 import org.springframework.security.core.userdetails.User;
@@ -16,11 +19,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final AdminUserRepository adminRepo;
     private final ClientRepository    clientRepo;
+    private final EmployeeRepository  employeeRepo;
 
     public CustomUserDetailsService(AdminUserRepository adminRepo,
-                                    ClientRepository clientRepo) {
-        this.adminRepo  = adminRepo;
-        this.clientRepo = clientRepo;
+                                    ClientRepository clientRepo,
+                                    EmployeeRepository employeeRepo) {
+        this.adminRepo   = adminRepo;
+        this.clientRepo  = clientRepo;
+        this.employeeRepo = employeeRepo;
     }
 
     @Override
@@ -34,6 +40,17 @@ public class CustomUserDetailsService implements UserDetailsService {
             return User.builder()
                     .username(admin.getUsername())
                     .password(admin.getPasswordHash())
+                    .roles(roles)
+                    .build();
+        }
+
+        /* -------- ¿Employee? -------- */
+        Employee emp = employeeRepo.findByEmail(username).orElse(null);
+        if (emp != null) {
+            String[] roles = new String[]{"CLIENT", emp.getRole().name()};
+            return User.builder()
+                    .username(emp.getClient().getEmail())
+                    .password(emp.getPasswordHash())
                     .roles(roles)
                     .build();
         }

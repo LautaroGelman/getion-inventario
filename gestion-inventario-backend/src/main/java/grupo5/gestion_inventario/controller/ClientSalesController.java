@@ -5,6 +5,7 @@ import grupo5.gestion_inventario.clientpanel.dto.SaleRequest;
 import grupo5.gestion_inventario.service.SalesService;
 import grupo5.gestion_inventario.repository.ClientRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class ClientSalesController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('MANAGER','CASHIER')")
     public ResponseEntity<SaleDto> createSale(@RequestBody SaleRequest request,
                                               Authentication auth) {
         // Busca el ID del cliente (Long) usando el usuario autenticado
