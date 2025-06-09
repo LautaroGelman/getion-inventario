@@ -3,8 +3,8 @@ package grupo5.gestion_inventario.controller;
 import grupo5.gestion_inventario.clientpanel.dto.AuthRequest;
 import grupo5.gestion_inventario.clientpanel.dto.AuthResponse;
 import grupo5.gestion_inventario.config.JwtUtil;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,14 +24,14 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final ClientRepository clientRepo;
+    private final EmployeeRepository employeeRepo;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil,
-                          ClientRepository clientRepo) {
+                          EmployeeRepository employeeRepo) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.clientRepo = clientRepo;
+        this.employeeRepo = employeeRepo;
     }
 
     /**
@@ -57,20 +57,20 @@ public class AuthController {
 
         String username = authentication.getName();
         String token;
+        String role = roles.isEmpty() ? null : roles.get(0).replace("ROLE_", "");
 
-        // 3) Si es ROLE_CLIENT, busco el clientId y uso generateToken con clientId
-        if (roles.contains("ROLE_CLIENT")) {
-            Client client = clientRepo.findByEmail(username) // o findByName, según tu entidad
+        // 3) Si es un empleado (ADMIN o CASHIER), incluyo su ID en el token
+        if (roles.contains("ROLE_ADMIN") || roles.contains("ROLE_CASHIER")) {
+            Employee employee = employeeRepo.findByEmail(username)
                     .orElseThrow(() ->
-                            new IllegalArgumentException("Cliente no encontrado: " + username));
-            Long clientId = client.getId();
+                            new IllegalArgumentException("Empleado no encontrado: " + username));
+            Long clientId = employee.getId();
             token = jwtUtil.generateToken(username, roles, clientId);
-        }
-        // 4) Si es ROLE_ADMIN (o cualquier otro rol), genero token sin clientId
-        else {
+        } else {
+            // Para cualquier otro rol (ej. usuarios del superpanel) no se incluye ID
             token = jwtUtil.generateToken(username, roles);
         }
 
-        return new AuthResponse(token);
+        return new AuthResponse(token, role);
     }
 }

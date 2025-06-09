@@ -5,8 +5,8 @@ import grupo5.gestion_inventario.clientpanel.dto.ProductDto;
 import grupo5.gestion_inventario.clientpanel.dto.ProfitabilitySummaryDto;
 import grupo5.gestion_inventario.clientpanel.dto.SaleDto;
 import grupo5.gestion_inventario.clientpanel.dto.SalesDailySummaryDto; // <-- IMPORT AÑADIDO
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.service.ProductService;
 import grupo5.gestion_inventario.service.SalesService;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +18,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client")
-@PreAuthorize("hasRole('CLIENT')")
+@PreAuthorize("hasAnyAuthority('ADMIN','CASHIER')")
 public class ClientDashboardController {
 
-    private final ClientRepository clientRepo;
+    private final EmployeeRepository employeeRepo;
     private final ProductService   productService;
     private final SalesService     salesService;
 
     public ClientDashboardController(
-            ClientRepository clientRepo,
+            EmployeeRepository employeeRepo,
             ProductService productService,
             SalesService salesService) {
-        this.clientRepo     = clientRepo;
+        this.employeeRepo     = employeeRepo;
         this.productService = productService;
         this.salesService   = salesService;
     }
 
     @GetMapping("/dashboard")
     public ResponseEntity<ClientDashboardDto> dashboard(Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         long lowStock   = productService.countLowStock(client.getId());
@@ -50,7 +50,7 @@ public class ClientDashboardController {
     public ResponseEntity<List<ProfitabilitySummaryDto>> getProfitabilitySummary(
             @RequestParam(defaultValue = "30") int days,
             Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         List<ProfitabilitySummaryDto> summary = salesService.getProfitabilitySummaryLastDays(client.getId(), days);
@@ -66,7 +66,7 @@ public class ClientDashboardController {
     public ResponseEntity<List<SalesDailySummaryDto>> getSalesSummary(
             @RequestParam(defaultValue = "30") int days,
             Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         List<SalesDailySummaryDto> summary = salesService.summaryLastDays(client.getId(), days);
@@ -76,7 +76,7 @@ public class ClientDashboardController {
 
     @GetMapping("/items")
     public ResponseEntity<List<ProductDto>> items(Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         List<ProductDto> products = productService.findByClientId(client.getId());
@@ -85,7 +85,7 @@ public class ClientDashboardController {
 
     @GetMapping("/sales")
     public ResponseEntity<List<SaleDto>> sales(Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
         List<SaleDto> sales = salesService.findByClientId(client.getId());

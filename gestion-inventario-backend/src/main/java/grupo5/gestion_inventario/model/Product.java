@@ -42,7 +42,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
     @JsonBackReference
-    private Client client;
+    private Employee client;
 
     // — Constructores —
 
@@ -55,7 +55,7 @@ public class Product {
                    BigDecimal price,
                    Integer stockQuantity,
                    Integer lowStockThreshold,
-                   Client client) {
+                   Employee client) {
         this.code              = code;
         this.name              = name;
         this.description       = description;
@@ -121,10 +121,10 @@ public class Product {
         this.lowStockThreshold = lowStockThreshold;
     }
 
-    public Client getClient() {
+    public Employee getClient() {
         return client;
     }
-    public void setClient(Client client) {
+    public void setClient(Employee client) {
         this.client = client;
     }
 }

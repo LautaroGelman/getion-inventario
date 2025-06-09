@@ -2,8 +2,8 @@
 package grupo5.gestion_inventario.service;
 
 import grupo5.gestion_inventario.clientpanel.dto.ProviderRequest;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.clientpanel.model.Provider;
 import grupo5.gestion_inventario.clientpanel.repository.ProviderRepository;
 import org.springframework.stereotype.Service;
@@ -16,19 +16,19 @@ import java.util.Optional;
 public class ProviderService {
 
     private final ProviderRepository providerRepo;
-    private final ClientRepository   clientRepo;
+    private final EmployeeRepository   employeeRepo;
 
     public ProviderService(ProviderRepository providerRepo,
-                           ClientRepository clientRepo) {
+                           EmployeeRepository employeeRepo) {
         this.providerRepo = providerRepo;
-        this.clientRepo   = clientRepo;
+        this.employeeRepo   = employeeRepo;
     }
 
     /**
      * Crea un proveedor para un cliente dado usando los datos de un DTO.
      */
     @Transactional
-    public Provider create(Client client, ProviderRequest request) {
+    public Provider create(Employee client, ProviderRequest request) {
         Provider provider = new Provider();
         provider.setClient(client);
         provider.setName(request.getName());
@@ -41,7 +41,7 @@ public class ProviderService {
      * Actualiza un proveedor existente, verificando que pertenece al cliente.
      */
     @Transactional
-    public Optional<Provider> update(Long providerId, ProviderRequest request, Client client) {
+    public Optional<Provider> update(Long providerId, ProviderRequest request, Employee client) {
         return providerRepo.findById(providerId)
                 // 1. Nos aseguramos que el proveedor pertenezca al cliente correcto.
                 .filter(provider -> provider.getClient().getId().equals(client.getId()))
@@ -60,7 +60,7 @@ public class ProviderService {
     @Transactional(readOnly = true)
     public List<Provider> findByClientId(Long clientId) {
         // Este método se mantiene, es útil para listados.
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return providerRepo.findByClientId(clientId);
@@ -70,7 +70,7 @@ public class ProviderService {
      * Busca un proveedor específico por su ID, verificando que pertenece al cliente.
      */
     @Transactional(readOnly = true)
-    public Optional<Provider> findByIdAndClient(Long providerId, Client client) {
+    public Optional<Provider> findByIdAndClient(Long providerId, Employee client) {
         return providerRepo.findById(providerId)
                 .filter(p -> p.getClient().getId().equals(client.getId()));
     }
@@ -81,7 +81,7 @@ public class ProviderService {
      * @return true si existía y se borró.
      */
     @Transactional
-    public boolean delete(Long providerId, Client client) {
+    public boolean delete(Long providerId, Employee client) {
         return providerRepo.findById(providerId)
                 .filter(p -> p.getClient().getId().equals(client.getId()))
                 .map(p -> {

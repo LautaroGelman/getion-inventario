@@ -2,10 +2,11 @@ package grupo5.gestion_inventario.controller;
 
 import grupo5.gestion_inventario.clientpanel.dto.ProductDto;
 import grupo5.gestion_inventario.clientpanel.dto.ProductRequest;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,21 +14,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client/products")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class ProductController {
 
     private final ProductService   productService;
-    private final ClientRepository clientRepo;
+    private final EmployeeRepository employeeRepo;
 
     public ProductController(ProductService productService,
-                             ClientRepository clientRepo) {
+                             EmployeeRepository employeeRepo) {
         this.productService = productService;
-        this.clientRepo     = clientRepo;
+        this.employeeRepo     = employeeRepo;
     }
 
     @PostMapping
     public ResponseEntity<ProductDto> create(@RequestBody ProductRequest req,
                                              Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
 
         ProductDto dto = productService.create(client, req);
@@ -37,7 +39,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> list(Authentication auth) {
         String email = auth.getName();
-        Client client = clientRepo.findByEmail(email)
+        Employee client = employeeRepo.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + email));
 
         List<ProductDto> dtos = productService.findByClientId(client.getId());
@@ -46,7 +48,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable Long id, Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
 
         return productService.findDtoByIdAndClient(id, client)
@@ -58,7 +60,7 @@ public class ProductController {
     public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
                                                     @RequestBody ProductRequest req,
                                                     Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
 
         return productService.updateProduct(id, req, client)
@@ -73,7 +75,7 @@ public class ProductController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id, Authentication auth) {
-        Client client = clientRepo.findByEmail(auth.getName())
+        Employee client = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
 
         boolean deleted = productService.deleteProduct(id, client);

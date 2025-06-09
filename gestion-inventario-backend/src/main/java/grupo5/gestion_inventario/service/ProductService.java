@@ -3,9 +3,9 @@ package grupo5.gestion_inventario.service;
 import grupo5.gestion_inventario.clientpanel.dto.ProductDto;
 import grupo5.gestion_inventario.clientpanel.dto.ProductRequest;
 import grupo5.gestion_inventario.model.Product;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import grupo5.gestion_inventario.repository.ProductRepository;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepo;
-    private final ClientRepository  clientRepo;
+    private final EmployeeRepository  employeeRepo;
 
     public ProductService(ProductRepository productRepo,
-                          ClientRepository clientRepo) {
+                          EmployeeRepository employeeRepo) {
         this.productRepo = productRepo;
-        this.clientRepo  = clientRepo;
+        this.employeeRepo  = employeeRepo;
     }
 
     @Transactional
-    public ProductDto create(Client client, ProductRequest req) {
+    public ProductDto create(Employee client, ProductRequest req) {
         Product product = new Product();
         product.setClient(client);
         product.setCode(req.getCode());
@@ -45,7 +45,7 @@ public class ProductService {
 
     // --- NUEVO MÉTODO PARA ACTUALIZAR UN PRODUCTO ---
     @Transactional
-    public Optional<ProductDto> updateProduct(Long productId, ProductRequest req, Client client) {
+    public Optional<ProductDto> updateProduct(Long productId, ProductRequest req, Employee client) {
         return productRepo.findById(productId)
                 // Nos aseguramos de que el producto pertenezca al cliente autenticado
                 .filter(product -> product.getClient().getId().equals(client.getId()))
@@ -67,7 +67,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<ProductDto> findByClientId(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return productRepo.findByClientId(clientId).stream()
@@ -77,14 +77,14 @@ public class ProductService {
 
     // --- NUEVO MÉTODO PARA BUSCAR UN ÚNICO DTO ---
     @Transactional(readOnly = true)
-    public Optional<ProductDto> findDtoByIdAndClient(Long productId, Client client) {
+    public Optional<ProductDto> findDtoByIdAndClient(Long productId, Employee client) {
         return productRepo.findById(productId)
                 .filter(product -> product.getClient().getId().equals(client.getId()))
                 .map(this::toDto); // Usamos el helper
     }
     // --- NUEVO MÉTODO PARA ELIMINAR UN PRODUCTO ---
     @Transactional
-    public boolean deleteProduct(Long productId, Client client) {
+    public boolean deleteProduct(Long productId, Employee client) {
         return productRepo.findById(productId)
                 .filter(product -> product.getClient().getId().equals(client.getId())) // Verificación de propiedad
                 .map(product -> {
@@ -96,7 +96,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public long countLowStock(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return productRepo.countLowStock(clientId);

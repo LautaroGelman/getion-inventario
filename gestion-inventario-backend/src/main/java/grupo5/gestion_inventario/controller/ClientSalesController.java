@@ -3,7 +3,7 @@ package grupo5.gestion_inventario.controller;
 import grupo5.gestion_inventario.clientpanel.dto.SaleDto;
 import grupo5.gestion_inventario.clientpanel.dto.SaleRequest;
 import grupo5.gestion_inventario.service.SalesService;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 public class ClientSalesController {
 
     private final SalesService     salesService;
-    private final ClientRepository clientRepo;
+    private final EmployeeRepository employeeRepo;
 
     public ClientSalesController(SalesService salesService,
-                                 ClientRepository clientRepo) {
+                                 EmployeeRepository employeeRepo) {
         this.salesService = salesService;
-        this.clientRepo   = clientRepo;
+        this.employeeRepo   = employeeRepo;
     }
 
     @PostMapping
     public ResponseEntity<SaleDto> createSale(@RequestBody SaleRequest request,
                                               Authentication auth) {
         // Busca el ID del cliente (Long) usando el usuario autenticado
-        Long clientId = clientRepo.findByEmail(auth.getName())
+        Long clientId = employeeRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"))
                 .getId();
 

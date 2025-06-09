@@ -1,7 +1,8 @@
 package grupo5.gestion_inventario.security;
 
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.model.Role;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.superpanel.model.AdminUser;
 import grupo5.gestion_inventario.superpanel.repository.AdminUserRepository;
 import org.springframework.security.core.userdetails.User;
@@ -14,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final AdminUserRepository adminRepo;
-    private final ClientRepository    clientRepo;
+    private final EmployeeRepository    employeeRepo;
 
     public CustomUserDetailsService(AdminUserRepository adminRepo,
-                                    ClientRepository clientRepo) {
+                                    EmployeeRepository employeeRepo) {
         this.adminRepo  = adminRepo;
-        this.clientRepo = clientRepo;
+        this.employeeRepo = employeeRepo;
     }
 
     @Override
@@ -37,17 +38,18 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .build();
         }
 
-        /* -------- ¿Client? --------
+        /* -------- ¿Employee? --------
            Busca por email; si quisieras aceptar “name”, agrega otro findBy… */
-        Client client = clientRepo.findByEmail(username)
-                .orElseGet(() -> clientRepo.findByName(username)
+        Employee employee = employeeRepo.findByEmail(username)
+                .orElseGet(() -> employeeRepo.findByName(username)
                         .orElse(null));
 
-        if (client != null) {
+        if (employee != null) {
+            String role = employee.getRole() != null ? employee.getRole().name() : "CASHIER";
             return User.builder()
-                    .username(client.getEmail())      // clave del JWT
-                    .password(client.getPasswordHash())
-                    .roles("CLIENT")
+                    .username(employee.getEmail())      // clave del JWT
+                    .password(employee.getPasswordHash())
+                    .roles(role)
                     .build();
         }
 

@@ -83,7 +83,7 @@ public class SecurityConfig {
                                 "/", "/index.html", "/login.html")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/client/**").hasRole("CLIENT")
+                        .requestMatchers("/client/**").hasAnyRole("ADMIN", "CASHIER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter,

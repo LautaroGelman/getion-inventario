@@ -3,8 +3,8 @@ package grupo5.gestion_inventario.controller;
 import grupo5.gestion_inventario.clientpanel.dto.ClientCreateRequest;
 import grupo5.gestion_inventario.clientpanel.dto.ClientListDto;
 import grupo5.gestion_inventario.clientpanel.dto.ClientRowDto;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.service.ClientService;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +18,10 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminClientController {
 
-    private final ClientService    clientService;
+    private final EmployeeService    clientService;
     private final PasswordEncoder  passwordEncoder;
 
-    public AdminClientController(ClientService clientService,
+    public AdminClientController(EmployeeService clientService,
                                  PasswordEncoder passwordEncoder) {
         this.clientService   = clientService;
         this.passwordEncoder = passwordEncoder;
@@ -32,7 +32,7 @@ public class AdminClientController {
      */
     @PostMapping
     public ResponseEntity<ClientRowDto> createClient(@RequestBody ClientCreateRequest req) {
-        Client client = new Client();
+        Employee client = new Employee();
         client.setName(      req.getName() );
         client.setEmail(     req.getEmail() );
         client.setPasswordHash(passwordEncoder.encode(req.getPassword()));
@@ -40,7 +40,7 @@ public class AdminClientController {
         client.setPlan(      req.getPlan().toUpperCase());
         client.setEstado(    req.getEstado().toUpperCase());
 
-        Client saved = clientService.create(client);
+        Employee saved = clientService.create(client);
 
         ClientRowDto dto = new ClientRowDto(
                 saved.getId(),

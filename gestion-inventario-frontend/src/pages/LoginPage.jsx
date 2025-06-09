@@ -16,21 +16,23 @@ function LoginPage() {
         try {
             // Usamos nuestro cliente API para hacer la petición POST
             const response = await api.post('/auth/login', { username, password });
-            const { token } = response;
+            const { token, role } = response;
 
             if (!token) {
                 throw new Error('No se recibió un token del servidor.');
             }
 
-            // Guardamos el JWT en el almacenamiento local
+            // Guardamos el JWT y el rol en el almacenamiento local
             localStorage.setItem('jwt', token);
+            if (role) {
+                localStorage.setItem('role', role);
+            }
 
-            // Decodificamos el token para obtener los roles y el clientId
+            // Decodificamos el token para obtener el clientId
             const [, payloadB64] = token.split('.');
             const padded = payloadB64.replace(/-/g, '+').replace(/_/g, '/') + '=='.slice(0, (4 - payloadB64.length % 4) % 4);
             const decoded = JSON.parse(atob(padded));
 
-            const roles = decoded.roles || [];
             const clientId = decoded.clientId;
 
             // Guardamos el clientId si existe
@@ -39,9 +41,9 @@ function LoginPage() {
             }
 
             // Redirigimos según el rol del usuario
-            if (roles.includes('ROLE_ADMIN')) {
+            if (role === 'ADMIN') {
                 navigate('/panel-admin');
-            } else if (roles.includes('ROLE_CLIENT')) {
+            } else if (role === 'CASHIER' || role === 'ADMIN') {
                 navigate('/panel-cliente');
             } else {
                 setError('Su cuenta no tiene un rol válido.');

@@ -1,7 +1,7 @@
 package grupo5.gestion_inventario.clientpanel.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class Compra {
 
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
-    private Client client;
+    private Employee client;
 
     @ManyToOne
     @JoinColumn(name = "id_proveedor", nullable = false)
@@ -57,11 +57,11 @@ public class Compra {
         this.total = total;
     }
 
-    public Client getClient() {
+    public Employee getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(Employee client) {
         this.client = client;
     }
 

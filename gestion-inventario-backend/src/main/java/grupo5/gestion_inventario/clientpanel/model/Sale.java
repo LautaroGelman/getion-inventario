@@ -1,7 +1,7 @@
 package grupo5.gestion_inventario.clientpanel.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import grupo5.gestion_inventario.clientpanel.model.EndCustomer;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -28,7 +28,7 @@ public class Sale {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    private Employee client;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "end_customer_id")
@@ -53,7 +53,7 @@ public class Sale {
      */
     public Sale(String paymentMethod,
                 BigDecimal totalAmount,
-                Client client,
+                Employee client,
                 EndCustomer endCustomer,
                 List<SaleItem> items,
                 LocalDateTime saleDate) { // <-- PARÁMETRO AÑADIDO
@@ -80,8 +80,8 @@ public class Sale {
     public BigDecimal getTotalAmount()      { return totalAmount; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
 
-    public Client getClient()               { return client; }
-    public void setClient(Client client)    { this.client = client; }
+    public Employee getClient()               { return client; }
+    public void setClient(Employee client)    { this.client = client; }
 
     public EndCustomer getEndCustomer() { return endCustomer; }
     public void setEndCustomer(EndCustomer endCustomer) { this.endCustomer = endCustomer; }
@@ -125,7 +125,7 @@ public class Sale {
      * @param paymentMethod El método de pago.
      * @param saleDate La fecha de la venta (puede ser nula, en cuyo caso se usa la actual).
      */
-    public Sale(Client client, EndCustomer endCustomer, String paymentMethod, LocalDateTime saleDate) {
+    public Sale(Employee client, EndCustomer endCustomer, String paymentMethod, LocalDateTime saleDate) {
         this.client = client;
         this.endCustomer = endCustomer;
         this.paymentMethod = paymentMethod;

@@ -9,9 +9,9 @@ import grupo5.gestion_inventario.clientpanel.model.SaleItem;
 import grupo5.gestion_inventario.clientpanel.model.EndCustomer;
 import grupo5.gestion_inventario.clientpanel.repository.SaleRepository;
 import grupo5.gestion_inventario.clientpanel.repository.EndCustomerRepository;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import grupo5.gestion_inventario.model.Product;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,16 +28,16 @@ import java.util.stream.Collectors;
 public class SalesService {
 
     private final SaleRepository saleRepo;
-    private final ClientRepository  clientRepo;
+    private final EmployeeRepository  employeeRepo;
     private final ProductRepository productRepo;
     private final EndCustomerRepository endCustomerRepo;
 
     public SalesService(SaleRepository saleRepo,
-                        ClientRepository clientRepo,
+                        EmployeeRepository employeeRepo,
                         ProductRepository productRepo,
                         EndCustomerRepository endCustomerRepo) {
         this.saleRepo    = saleRepo;
-        this.clientRepo  = clientRepo;
+        this.employeeRepo  = employeeRepo;
         this.productRepo = productRepo;
         this.endCustomerRepo = endCustomerRepo;
     }
@@ -49,7 +49,7 @@ public class SalesService {
 
         System.out.println("--- FECHA RECIBIDA EN EL SERVICIO: " + req.getSaleDate() + " ---");
 
-        Client client = clientRepo.findById(clientId)
+        Employee client = employeeRepo.findById(clientId)
                 .orElseThrow(() ->
                         new IllegalArgumentException("Cliente no encontrado: " + clientId));
 
@@ -101,7 +101,7 @@ public class SalesService {
 
     @Transactional(readOnly = true)
     public long countSalesToday(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         LocalDate today = LocalDate.now();
@@ -114,7 +114,7 @@ public class SalesService {
 
     @Transactional(readOnly = true)
     public List<SaleDto> findByClientId(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return saleRepo.findByClientId(clientId).stream()
@@ -140,7 +140,7 @@ public class SalesService {
 
     @Transactional(readOnly = true)
     public List<SalesDailySummaryDto> summaryLastDays(Long clientId, int days) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
 
@@ -168,7 +168,7 @@ public class SalesService {
     // --- ¡NUEVO MÉTODO AÑADIDO AQUÍ! ---
     @Transactional(readOnly = true)
     public List<ProfitabilitySummaryDto> getProfitabilitySummaryLastDays(Long clientId, int days) {
-        if (!clientRepo.existsById(clientId)) {
+        if (!employeeRepo.existsById(clientId)) {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
 

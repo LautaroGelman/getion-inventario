@@ -1,6 +1,6 @@
 package grupo5.gestion_inventario.clientpanel.model;
 
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,7 +27,7 @@ public class PurchaseOrder {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    private Employee client;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -85,11 +85,11 @@ public class PurchaseOrder {
         this.provider = provider;
     }
 
-    public Client getClient() {
+    public Employee getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(Employee client) {
         this.client = client;
     }
 

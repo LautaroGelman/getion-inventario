@@ -1,7 +1,7 @@
 // src/main/java/grupo5/gestion_inventario/clientpanel/model/CashRegisterSession.java
 package grupo5.gestion_inventario.clientpanel.model;
 
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class CashRegisterSession {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    private Employee client;
 
     /** Constructor por defecto: establece openedAt = ahora */
     public CashRegisterSession() {
@@ -42,7 +42,7 @@ public class CashRegisterSession {
     /**
      * Constructor completo (cierre se asigna luego).
      */
-    public CashRegisterSession(BigDecimal openingBalance, Client client) {
+    public CashRegisterSession(BigDecimal openingBalance, Employee client) {
         this.openingBalance = openingBalance;
         this.client = client;
         this.openedAt = LocalDateTime.now();
@@ -82,10 +82,10 @@ public class CashRegisterSession {
         this.closedAt = closedAt;
     }
 
-    public Client getClient() {
+    public Employee getClient() {
         return client;
     }
-    public void setClient(Client client) {
+    public void setClient(Employee client) {
         this.client = client;
     }
 }

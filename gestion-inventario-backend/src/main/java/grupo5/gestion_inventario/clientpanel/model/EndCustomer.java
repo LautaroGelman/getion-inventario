@@ -1,6 +1,6 @@
 package grupo5.gestion_inventario.clientpanel.model;
 
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -22,11 +22,11 @@ public class EndCustomer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    private Employee client;
 
     public EndCustomer() {}
 
-    public EndCustomer(String name, String contactInfo, Client client) {
+    public EndCustomer(String name, String contactInfo, Employee client) {
         this.name = name;
         this.contactInfo = contactInfo;
         this.client = client;
@@ -38,6 +38,6 @@ public class EndCustomer {
     public String getContactInfo() { return contactInfo; }
     public void setContactInfo(String contactInfo) { this.contactInfo = contactInfo; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public Client getClient() { return client; }
-    public void setClient(Client client) { this.client = client; }
+    public Employee getClient() { return client; }
+    public void setClient(Employee client) { this.client = client; }
 }
