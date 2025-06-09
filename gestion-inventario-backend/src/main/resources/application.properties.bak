@@ -15,5 +15,5 @@ logging.level.org.springframework.security=DEBUG
 
 #api de seguridad:
 app.jwt.secret=TuClaveSecretaDeAlMenos32Caracteres...
-# 1 dÃ­a en milisegundos
+# 1 día en milisegundos
 app.jwt.expiration-ms=86400000
