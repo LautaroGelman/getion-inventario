@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public record SaleDto(
         String       clientName,
+        String       endCustomerName,
         String       itemName,
         int          quantity,
         BigDecimal   price,

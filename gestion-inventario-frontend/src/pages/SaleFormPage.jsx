@@ -9,6 +9,8 @@ function SaleFormPage() {
     // Estados para el formulario
     const [articles, setArticles] = useState([]);
     const [selectedArticleId, setSelectedArticleId] = useState('');
+    const [customers, setCustomers] = useState([]);
+    const [selectedCustomerId, setSelectedCustomerId] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [paymentMethod, setPaymentMethod] = useState('');
     const [saleDate, setSaleDate] = useState('');
@@ -19,22 +21,28 @@ function SaleFormPage() {
 
     // Cargar los artículos para el menú desplegable cuando el componente se monta
     useEffect(() => {
-        api.get('/client/items')
-            .then(data => {
-                setArticles(data);
+        const fetchData = async () => {
+            try {
+                const [itemsData, custData] = await Promise.all([
+                    api.get('/client/items'),
+                    api.get('/client/end-customers')
+                ]);
+                setArticles(itemsData);
+                setCustomers(custData);
+            } catch (err) {
+                setError('No se pudieron cargar los datos. ' + err.message);
+            } finally {
                 setLoading(false);
-            })
-            .catch(err => {
-                setError('No se pudieron cargar los artículos. ' + err.message);
-                setLoading(false);
-            });
+            }
+        };
+        fetchData();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
-        if (!selectedArticleId || !quantity || !paymentMethod) {
+        if (!selectedArticleId || !quantity || !paymentMethod || !selectedCustomerId) {
             setError('Por favor, completa todos los campos.');
             return;
         }
@@ -43,7 +51,7 @@ function SaleFormPage() {
 
         const payload = {
             paymentMethod: paymentMethod,
-            // Si la fecha está vacía, enviamos null para que el backend use la fecha actual
+            endCustomerId: parseInt(selectedCustomerId, 10),
             saleDate: saleDate ? `${saleDate}T12:00:00` : null,
             items: [
                 {
@@ -82,6 +90,16 @@ function SaleFormPage() {
                                 <option key={it.id} value={it.id}>
                                     {it.name} (stock: {it.stock})
                                 </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="customer">Cliente:</label>
+                        <select id="customer" required value={selectedCustomerId} onChange={e => setSelectedCustomerId(e.target.value)}>
+                            <option value="">Seleccione...</option>
+                            {customers.map(c => (
+                                <option key={c.id} value={c.id}>{c.name}</option>
                             ))}
                         </select>
                     </div>
