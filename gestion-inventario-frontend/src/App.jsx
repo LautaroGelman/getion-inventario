@@ -31,6 +31,7 @@ function App() {
             <Route path="/form-orden-compra" element={<ProtectedRoute><PurchaseOrderFormPage /></ProtectedRoute>} />
             <Route path="/detalle-orden-compra/:purchaseOrderId" element={<ProtectedRoute><PurchaseOrderDetailPage /></ProtectedRoute>} />
             <Route path="/empleados/nuevo" element={<ProtectedRoute><EmployeeFormPage /></ProtectedRoute>} />
+            <Route path="/empleados/:employeeId" element={<ProtectedRoute><EmployeeFormPage /></ProtectedRoute>} />
             {/* --- RUTA ACTUALIZADA PARA EL PANEL DE ADMIN --- */}
             <Route path="/panel-admin" element={<ProtectedRoute><AdminPanelPage /></ProtectedRoute>} />
 
