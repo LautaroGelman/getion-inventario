@@ -1,94 +1,63 @@
 package grupo5.gestion_inventario.config;
 
-import grupo5.gestion_inventario.security.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-//import org.springframework.security.web.csrf.CsrfConfigurer;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService uds;
-    private final JwtUtil jwtUtil;
-
-    public SecurityConfig(CustomUserDetailsService uds,
-                          JwtUtil jwtUtil) {
-        this.uds = uds;
-        this.jwtUtil = jwtUtil;
-    }
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthProvider(PasswordEncoder enc) {
-        DaoAuthenticationProvider p = new DaoAuthenticationProvider();
-        p.setUserDetailsService(uds);
-        p.setPasswordEncoder(enc);
-        return p;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http,
-                                                       DaoAuthenticationProvider dao)
-            throws Exception {
-        return http.authenticationProvider(dao)
-                .getSharedObject(AuthenticationManagerBuilder.class)
-                .build();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-                                           DaoAuthenticationProvider dao) throws Exception {
-
-        JwtAuthenticationFilter jwtFilter =
-                new JwtAuthenticationFilter(jwtUtil, uds);
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // DESACTIVAR CSRF por completo
-                .csrf(CsrfConfigurer::disable)
+                // 1. Configuración de CORS para permitir la comunicación con el frontend.
+                .cors(cors -> cors.configure(http))
 
-                .sessionManagement(sm ->
-                        sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(dao)
-                .authorizeHttpRequests(auth -> auth
-                        // Permite las solicitudes OPTIONS para CORS
+                // 2. Se deshabilita CSRF. Esta es la causa del error 403 y es una
+                //    práctica estándar para APIs stateless que usan tokens JWT.
+                .csrf(csrf -> csrf.disable())
+
+                // 3. Definición de las reglas de autorización para cada ruta.
+                .authorizeHttpRequests(authorize -> authorize
+                        // Permite el acceso sin autenticación a los endpoints de login.
+                        .requestMatchers("/api/auth/login", "/api/superpanel/auth/login").permitAll()
+
+                        // Permite las peticiones OPTIONS pre-vuelo de CORS a todas las rutas.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Endpoints de autenticación públicos
-                        .requestMatchers("/api/auth/**", "/api/admin/auth/**").permitAll()
+                        // Requiere el rol SUPER_ADMIN para cualquier ruta dentro de /api/superpanel/
+                        .requestMatchers("/api/superpanel/**").hasAuthority("SUPER_ADMIN")
 
-                        // Ahora también permitimos la creación de admin-users sin token
-                        .requestMatchers(HttpMethod.POST, "/admin/users").permitAll()
+                        // Requiere rol ADMIN o CASHIER para cualquier ruta dentro de /api/clientpanel/
+                        .requestMatchers("/api/clientpanel/**").hasAnyAuthority("ADMIN", "CASHIER")
 
-                        // Rutas protegidas por rol
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/client/**").hasRole("CLIENT")
-
-                        // El resto requiere autenticación
+                        // Todas las demás peticiones deben estar autenticadas.
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtFilter,
-                        org.springframework.security.web.authentication.
-                                UsernamePasswordAuthenticationFilter.class);
+
+                // 4. Configuración del manejo de sesiones.
+                // Se establece como STATELESS porque usamos tokens JWT, no sesiones de servidor.
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
+                // 5. Se define el proveedor de autenticación.
+                .authenticationProvider(authenticationProvider)
+
+                // 6. Se añade nuestro filtro personalizado de JWT antes del filtro de usuario/contraseña.
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

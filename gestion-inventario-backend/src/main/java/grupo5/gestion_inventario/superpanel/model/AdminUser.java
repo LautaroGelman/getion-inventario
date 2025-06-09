@@ -1,46 +1,82 @@
-// src/main/java/grupo5/gestion_inventario/superpanel/model/AdminUser.java
 package grupo5.gestion_inventario.superpanel.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "admin_user")
-public class AdminUser {
+@Table(name = "admin_users")
+@Getter
+@Setter
+@NoArgsConstructor // Lombok generará el constructor sin argumentos
+public class AdminUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
     private String username;
+    private String passwordHash; // Se mantiene el nombre original del campo
 
-    @Column(nullable = false)
-    private String passwordHash;
-
+    // Se mantiene la estructura original de roles
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(
-            name = "admin_user_role",
-            joinColumns = @JoinColumn(name = "admin_user_id")
-    )
-    @Column(name = "role", length = 50)
+    @CollectionTable(name = "admin_user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
     private Set<String> roles;
 
-    public AdminUser() {}
-
+    // Se mantiene el constructor original que tu servicio necesita
     public AdminUser(String username, String passwordHash, Set<String> roles) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.roles = roles;
     }
 
-    public Long getId() { return id; }
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    // MÉTODOS REQUERIDOS POR UserDetails (ADAPTADOS A TU CLASE)
 
-    public String getPasswordHash() { return passwordHash; }
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Convierte tu Set<String> de roles a la colección que Spring Security necesita
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
 
-    public Set<String> getRoles() { return roles; }
-    public void setRoles(Set<String> roles) { this.roles = roles; }
+    @Override
+    public String getPassword() {
+        // Devuelve el campo original de tu clase
+        return this.passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

@@ -1,76 +1,73 @@
 package grupo5.gestion_inventario.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-/** Employee belonging to a business account */
+import java.util.Collection;
+import java.util.List;
 
+@Data
 @Entity
-@Table(name = "employee")
-public class Employee {
-
+@Table(name = "employees")
+public class Employee implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false, unique = true)
+    private String password;
     private String email;
 
-    @Column(nullable = false)
-    private String passwordHash;
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private EmployeeRole role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_account_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
+
+    // Se restaura el campo que tu servicio necesita
+    @ManyToOne
+    @JoinColumn(name = "business_account_id")
     private BusinessAccount businessAccount;
 
-    public Long getId() {
-        return id;
+
+    // MÉTODOS REQUERIDOS POR UserDetails (ADAPTADOS A TU CLASE)
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public String getUsername() {
+        // Para los empleados, el "username" de seguridad es su email.
+        return this.email;
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public EmployeeRole getRole() {
-        return role;
-    }
-
-    public void setRole(EmployeeRole role) {
-        this.role = role;
-    }
-
-    public BusinessAccount getBusinessAccount() {
-        return businessAccount;
-    }
-
-    public void setBusinessAccount(BusinessAccount businessAccount) {
-        this.businessAccount = businessAccount;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
-

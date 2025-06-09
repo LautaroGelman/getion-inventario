@@ -1,84 +1,81 @@
 package grupo5.gestion_inventario.superpanel.controller;
 
-import grupo5.gestion_inventario.clientpanel.dto.AdminUserRequest;
+import grupo5.gestion_inventario.clientpanel.dto.AuthRequest;
+import grupo5.gestion_inventario.clientpanel.dto.AuthResponse;
+import grupo5.gestion_inventario.config.JwtUtil;
 import grupo5.gestion_inventario.superpanel.model.AdminUser;
 import grupo5.gestion_inventario.superpanel.service.AdminUserService;
-import org.springframework.http.MediaType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-/**
- * Controlador para gestión de usuarios administradores.
- */
 @RestController
-@RequestMapping(value = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping("/api/superpanel/users")
+@RequiredArgsConstructor
 public class AdminUserController {
 
     private final AdminUserService service;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
-    public AdminUserController(AdminUserService service) {
-        this.service = service;
+    @PostMapping("/auth/login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+
+        // CORRECCIÓN: Extraemos los datos de UserDetails para pasarlos al método correcto.
+        String username = userDetails.getUsername();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        // Llamamos a la versión de generateToken para administradores (sin clientId).
+        final String jwt = jwtUtil.generateToken(username, roles);
+
+        return ResponseEntity.ok(new AuthResponse(jwt, "SUPER_ADMIN"));
     }
 
-    /**
-     * Crea un nuevo usuario administrador.
-     * Este endpoint NO requiere autenticación para permitir registrar el primer admin.
-     */
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AdminUser> create(@RequestBody AdminUserRequest req) {
-        AdminUser created = service.create(req.getUsername(), req.getPassword(), req.getRoles());
-        return ResponseEntity.ok(created);
+    @PostMapping
+    public AdminUser createAdminUser(@RequestBody Map<String, String> payload) {
+        // El controlador ahora solo necesita username y password
+        return service.create(payload.get("username"), payload.get("password"));
     }
 
-    /**
-     * Lista todos los administradores.
-     * Solo accesible por ADMIN.
-     */
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<AdminUser>> list() {
-        return ResponseEntity.ok(service.findAll());
+    public List<AdminUser> getAllAdminUsers() {
+        // Llama al método correcto en el servicio
+        return service.findAll();
     }
 
-    /**
-     * Obtiene un administrador por ID.
-     * Solo accesible por ADMIN.
-     */
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AdminUser> get(@PathVariable Long id) {
+    public ResponseEntity<AdminUser> getAdminUserById(@PathVariable Long id) {
+        // Llama al método correcto en el servicio
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Actualiza los datos de un administrador.
-     * Solo accesible por ADMIN.
-     */
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AdminUser> update(
-            @PathVariable Long id,
-            @RequestBody AdminUserRequest req) {
-        return service.update(id, req.getPassword(), req.getRoles())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PutMapping("/{id}")
+    public ResponseEntity<AdminUser> updateAdminUser(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        // El controlador ahora solo actualiza la contraseña
+        AdminUser updatedUser = service.update(id, payload.get("password"));
+        return ResponseEntity.ok(updatedUser);
     }
 
-    /**
-     * Elimina un administrador.
-     * Solo accesible por ADMIN.
-     */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean removed = service.delete(id);
-        return removed
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deleteAdminUser(@PathVariable Long id) {
+        // Llama al método correcto en el servicio
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
