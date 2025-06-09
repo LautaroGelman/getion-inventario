@@ -1,9 +1,9 @@
 package grupo5.gestion_inventario.service;
 
 import grupo5.gestion_inventario.model.Employee;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.BusinessAccount;
 import grupo5.gestion_inventario.repository.EmployeeRepository;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.BusinessAccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,23 +12,23 @@ import java.util.List;
 public class EmployeeService {
 
     private final EmployeeRepository repo;
-    private final ClientRepository clientRepo;
+    private final BusinessAccountRepository businessAccountRepo;
 
-    public EmployeeService(EmployeeRepository repo, ClientRepository clientRepo) {
+    public EmployeeService(EmployeeRepository repo, BusinessAccountRepository businessAccountRepo) {
         this.repo = repo;
-        this.clientRepo = clientRepo;
+        this.businessAccountRepo = businessAccountRepo;
     }
 
-    public Employee create(Long clientId, Employee e) {
-        Client client = clientRepo.findById(clientId)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
-        e.setClient(client);
+    public Employee create(Long accountId, Employee e) {
+        BusinessAccount account = businessAccountRepo.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("BusinessAccount no encontrado"));
+        e.setBusinessAccount(account);
         return repo.save(e);
     }
 
-    public List<Employee> listByClient(Long clientId) {
+    public List<Employee> listByClient(Long accountId) {
         return repo.findAll().stream()
-                .filter(emp -> emp.getClient() != null && emp.getClient().getId().equals(clientId))
+                .filter(emp -> emp.getBusinessAccount() != null && emp.getBusinessAccount().getId().equals(accountId))
                 .toList();
     }
 

@@ -3,8 +3,8 @@ package grupo5.gestion_inventario.controller;
 import grupo5.gestion_inventario.clientpanel.dto.AuthRequest;
 import grupo5.gestion_inventario.clientpanel.dto.AuthResponse;
 import grupo5.gestion_inventario.config.JwtUtil;
-import grupo5.gestion_inventario.model.Client;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.model.BusinessAccount;
+import grupo5.gestion_inventario.repository.BusinessAccountRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,14 +25,14 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final ClientRepository clientRepo;
+    private final BusinessAccountRepository businessAccountRepo;
 
     public AuthController(AuthenticationManager authenticationManager,
                           JwtUtil jwtUtil,
-                          ClientRepository clientRepo) {
+                          BusinessAccountRepository businessAccountRepo) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.clientRepo = clientRepo;
+        this.businessAccountRepo = businessAccountRepo;
     }
 
     /**
@@ -66,7 +66,7 @@ public class AuthController {
 
         // 3) Si es ROLE_CLIENT, busco el clientId y uso generateToken con clientId
         if (roles.contains("ROLE_CLIENT")) {
-            Client client = clientRepo.findByEmail(username) // o findByName, según tu entidad
+            BusinessAccount client = businessAccountRepo.findByEmail(username) // o findByName, según tu entidad
                     .orElseThrow(() ->
                             new IllegalArgumentException("Cliente no encontrado: " + username));
             Long clientId = client.getId();

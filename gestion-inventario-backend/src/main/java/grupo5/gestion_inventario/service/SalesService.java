@@ -9,9 +9,9 @@ import grupo5.gestion_inventario.clientpanel.model.SaleItem;
 import grupo5.gestion_inventario.clientpanel.model.EndCustomer;
 import grupo5.gestion_inventario.clientpanel.repository.SaleRepository;
 import grupo5.gestion_inventario.clientpanel.repository.EndCustomerRepository;
-import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.BusinessAccount;
 import grupo5.gestion_inventario.model.Product;
-import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.BusinessAccountRepository;
 import grupo5.gestion_inventario.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,16 +28,16 @@ import java.util.stream.Collectors;
 public class SalesService {
 
     private final SaleRepository saleRepo;
-    private final ClientRepository  clientRepo;
+    private final BusinessAccountRepository  businessAccountRepo;
     private final ProductRepository productRepo;
     private final EndCustomerRepository endCustomerRepo;
 
     public SalesService(SaleRepository saleRepo,
-                        ClientRepository clientRepo,
+                        BusinessAccountRepository businessAccountRepo,
                         ProductRepository productRepo,
                         EndCustomerRepository endCustomerRepo) {
         this.saleRepo    = saleRepo;
-        this.clientRepo  = clientRepo;
+        this.businessAccountRepo  = businessAccountRepo;
         this.productRepo = productRepo;
         this.endCustomerRepo = endCustomerRepo;
     }
@@ -49,9 +49,9 @@ public class SalesService {
 
         System.out.println("--- FECHA RECIBIDA EN EL SERVICIO: " + req.getSaleDate() + " ---");
 
-        Client client = clientRepo.findById(clientId)
+        BusinessAccount account = businessAccountRepo.findById(clientId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Cliente no encontrado: " + clientId));
+                        new IllegalArgumentException("BusinessAccount no encontrado: " + clientId));
 
         EndCustomer endCustomer = null;
         if (req.getEndCustomerId() != null) {
@@ -60,7 +60,7 @@ public class SalesService {
                     .orElseThrow(() -> new IllegalArgumentException("Cliente final no encontrado"));
         }
 
-        Sale sale = new Sale(client, endCustomer, req.getPaymentMethod(), req.getSaleDate());
+        Sale sale = new Sale(account, endCustomer, req.getPaymentMethod(), req.getSaleDate());
 
         req.getItems().forEach(itemRequest -> {
             Product product = productRepo.findById(itemRequest.getProductId())
@@ -101,8 +101,8 @@ public class SalesService {
 
     @Transactional(readOnly = true)
     public long countSalesToday(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
-            throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
+        if (!businessAccountRepo.existsById(clientId)) {
+            throw new IllegalArgumentException("BusinessAccount no encontrado: " + clientId);
         }
         LocalDate today = LocalDate.now();
         return saleRepo.countBetween(
@@ -114,8 +114,8 @@ public class SalesService {
 
     @Transactional(readOnly = true)
     public List<SaleDto> findByClientId(Long clientId) {
-        if (!clientRepo.existsById(clientId)) {
-            throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
+        if (!businessAccountRepo.existsById(clientId)) {
+            throw new IllegalArgumentException("BusinessAccount no encontrado: " + clientId);
         }
         return saleRepo.findByClientId(clientId).stream()
                 .map(this::toDto)
@@ -124,7 +124,7 @@ public class SalesService {
 
     private SaleDto toDto(Sale s) {
         return new SaleDto(
-                s.getClient().getName(),
+                s.getBusinessAccount().getName(),
                 s.getEndCustomer() != null ? s.getEndCustomer().getName() : "",
                 s.getItems().isEmpty()
                         ? ""
@@ -140,8 +140,8 @@ public class SalesService {
 
     @Transactional(readOnly = true)
     public List<SalesDailySummaryDto> summaryLastDays(Long clientId, int days) {
-        if (!clientRepo.existsById(clientId)) {
-            throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
+        if (!businessAccountRepo.existsById(clientId)) {
+            throw new IllegalArgumentException("BusinessAccount no encontrado: " + clientId);
         }
 
         LocalDate start = LocalDate.now().minusDays(days - 1);
@@ -168,8 +168,8 @@ public class SalesService {
     // --- ¡NUEVO MÉTODO AÑADIDO AQUÍ! ---
     @Transactional(readOnly = true)
     public List<ProfitabilitySummaryDto> getProfitabilitySummaryLastDays(Long clientId, int days) {
-        if (!clientRepo.existsById(clientId)) {
-            throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
+        if (!businessAccountRepo.existsById(clientId)) {
+            throw new IllegalArgumentException("BusinessAccount no encontrado: " + clientId);
         }
 
         LocalDate startDate = LocalDate.now().minusDays(days - 1);
