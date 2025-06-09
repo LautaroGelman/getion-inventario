@@ -35,6 +35,7 @@ public class ClientDashboardController {
     }
 
     @GetMapping("/dashboard")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<ClientDashboardDto> dashboard(Authentication auth) {
         Client client = clientRepo.findByEmail(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
@@ -47,6 +48,7 @@ public class ClientDashboardController {
     }
 
     @GetMapping("/dashboard/profitability-summary")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<List<ProfitabilitySummaryDto>> getProfitabilitySummary(
             @RequestParam(defaultValue = "30") int days,
             Authentication auth) {
@@ -63,6 +65,7 @@ public class ClientDashboardController {
      * GET /client/sales/summary?days=30
      */
     @GetMapping("/sales/summary")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<List<SalesDailySummaryDto>> getSalesSummary(
             @RequestParam(defaultValue = "30") int days,
             Authentication auth) {
