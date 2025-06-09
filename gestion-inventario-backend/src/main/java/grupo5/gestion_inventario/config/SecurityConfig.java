@@ -64,7 +64,8 @@ public class SecurityConfig {
                 .csrf(c -> c
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(
-                                new AntPathRequestMatcher("/auth/**"),
+                                new AntPathRequestMatcher("/api/auth/**"),
+                                new AntPathRequestMatcher("/api/admin/auth/**"),
                                 new AntPathRequestMatcher("/admin/clients/**"),
                                 new AntPathRequestMatcher("/client/**"),
                                 new AntPathRequestMatcher("/products/**")
@@ -75,17 +76,13 @@ public class SecurityConfig {
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(dao)
                 .authorizeHttpRequests(auth -> auth
-                        // --- ¡LÍNEA AÑADIDA PARA PERMITIR PREFLIGHT REQUESTS! ---
+                        // Permite las solicitudes OPTIONS para CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/**",
-                                "/html/**",
-                                "/css/**",
-                                "/javascript/**",
-                                "/images/**",
-                                "/", "/index.html", "/login.html")
-                        .permitAll()
+                        // Rutas públicas para login y registro
+                        .requestMatchers("/api/auth/**", "/api/admin/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/client/**").hasRole("CLIENT")
+                        // Todas las demás rutas requieren autenticación
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter,
