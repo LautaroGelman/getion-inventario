@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/client/products")
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAuthority('MANAGER')")
 public class ProductController {
 
     private final ProductService   productService;

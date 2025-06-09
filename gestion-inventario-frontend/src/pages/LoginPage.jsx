@@ -43,7 +43,7 @@ function LoginPage() {
             // Redirigimos según el rol del usuario
             if (role === 'ADMIN') {
                 navigate('/panel-admin');
-            } else if (role === 'CASHIER' || role === 'ADMIN') {
+            } else if (role === 'MANAGER' || role === 'CASHIER') {
                 navigate('/panel-cliente');
             } else {
                 setError('Su cuenta no tiene un rol válido.');
