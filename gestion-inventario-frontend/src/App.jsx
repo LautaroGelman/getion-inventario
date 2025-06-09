@@ -7,6 +7,8 @@ import SaleFormPage from './pages/SaleFormPage';
 import ProviderFormPage from './pages/ProviderFormPage';
 import AdminPanelPage from './pages/AdminPanelPage';
 import ClientFormPage from "./pages/ClientFormPage.jsx"; // <-- IMPORTAMOS
+import PurchaseOrderFormPage from './pages/PurchaseOrderFormPage';
+import PurchaseOrderDetailPage from './pages/PurchaseOrderDetailPage';
 
 function App() {
     return (
@@ -22,6 +24,8 @@ function App() {
             <Route path="/form-proveedor/:providerId" element={<ProtectedRoute><ProviderFormPage /></ProtectedRoute>} />
             {/* --- NUEVA RUTA PARA EL FORMULARIO DE CLIENTE --- */}
             <Route path="/form-cliente" element={<ProtectedRoute><ClientFormPage /></ProtectedRoute>} />
+            <Route path="/form-orden-compra" element={<ProtectedRoute><PurchaseOrderFormPage /></ProtectedRoute>} />
+            <Route path="/detalle-orden-compra/:purchaseOrderId" element={<ProtectedRoute><PurchaseOrderDetailPage /></ProtectedRoute>} />
             {/* --- RUTA ACTUALIZADA PARA EL PANEL DE ADMIN --- */}
             <Route path="/panel-admin" element={<ProtectedRoute><AdminPanelPage /></ProtectedRoute>} />
 
