@@ -57,6 +57,7 @@ public class AuthController {
 
         String username = authentication.getName();
         String token;
+        String role = roles.isEmpty() ? null : roles.get(0).replace("ROLE_", "");
 
         // 3) Si es ROLE_CLIENT, busco el clientId y uso generateToken con clientId
         if (roles.contains("ROLE_CLIENT")) {
@@ -71,6 +72,6 @@ public class AuthController {
             token = jwtUtil.generateToken(username, roles);
         }
 
-        return new AuthResponse(token);
+        return new AuthResponse(token, role);
     }
 }
