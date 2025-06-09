@@ -8,12 +8,11 @@ function SaleFormPage() {
 
     // Estados para el formulario
     const [articles, setArticles] = useState([]);
-    const [selectedArticleId, setSelectedArticleId] = useState('');
     const [customers, setCustomers] = useState([]);
     const [selectedCustomerId, setSelectedCustomerId] = useState('');
-    const [quantity, setQuantity] = useState(1);
-    const [tax, setTax] = useState(0);
-    const [discount, setDiscount] = useState(0);
+    const [items, setItems] = useState([
+        { productId: '', quantity: 1, tax: 0, discount: 0 }
+    ]);
     const [paymentMethod, setPaymentMethod] = useState('');
     const [saleDate, setSaleDate] = useState('');
 
@@ -40,30 +39,41 @@ function SaleFormPage() {
         fetchData();
     }, []);
 
+    const handleItemChange = (index, field, value) => {
+        setItems(prev => prev.map((it, i) => i === index ? { ...it, [field]: value } : it));
+    };
+
+    const addItem = () => {
+        setItems(prev => [...prev, { productId: '', quantity: 1, tax: 0, discount: 0 }]);
+    };
+
+    const removeItem = (index) => {
+        setItems(prev => prev.filter((_, i) => i !== index));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
-        if (!selectedArticleId || !quantity || !paymentMethod || !selectedCustomerId) {
+        if (!paymentMethod || !selectedCustomerId || items.some(it => !it.productId || !it.quantity)) {
             setError('Por favor, completa todos los campos.');
             return;
         }
-
-        const selectedArticle = articles.find(a => a.id === parseInt(selectedArticleId, 10));
 
         const payload = {
             paymentMethod: paymentMethod,
             endCustomerId: parseInt(selectedCustomerId, 10),
             saleDate: saleDate ? `${saleDate}T12:00:00` : null,
-            items: [
-                {
-                    productId: selectedArticle.id,
-                    quantity: parseInt(quantity, 10),
-                    unitPrice: selectedArticle.price,
-                    tax: parseFloat(tax),
-                    discount: parseFloat(discount),
-                },
-            ],
+            items: items.map(it => {
+                const art = articles.find(a => a.id === parseInt(it.productId, 10));
+                return {
+                    productId: parseInt(it.productId, 10),
+                    quantity: parseInt(it.quantity, 10),
+                    unitPrice: art ? art.price : 0,
+                    tax: parseFloat(it.tax),
+                    discount: parseFloat(it.discount),
+                };
+            })
         };
 
         try {
@@ -86,16 +96,25 @@ function SaleFormPage() {
             </header>
             <main>
                 <form id="form-venta" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="articulo">Artículo:</label>
-                        <select id="articulo" name="articulo" required value={selectedArticleId} onChange={e => setSelectedArticleId(e.target.value)}>
-                            <option value="">Seleccione...</option>
-                            {articles.map(it => (
-                                <option key={it.id} value={it.id}>
-                                    {it.name} (stock: {it.stock})
-                                </option>
-                            ))}
-                        </select>
+                    {items.map((item, idx) => (
+                        <div key={idx} className="form-group">
+                            <label>Artículo:</label>
+                            <select value={item.productId} onChange={e => handleItemChange(idx, 'productId', e.target.value)} required>
+                                <option value="">Seleccione...</option>
+                                {articles.map(it => (
+                                    <option key={it.id} value={it.id}>
+                                        {it.name} (stock: {it.stock})
+                                    </option>
+                                ))}
+                            </select>
+                            <input type="number" min="1" value={item.quantity} onChange={e => handleItemChange(idx, 'quantity', e.target.value)} />
+                            <input type="number" min="0" step="0.01" value={item.tax} onChange={e => handleItemChange(idx, 'tax', e.target.value)} placeholder="IVA" />
+                            <input type="number" min="0" step="0.01" value={item.discount} onChange={e => handleItemChange(idx, 'discount', e.target.value)} placeholder="Descuento" />
+                            {items.length > 1 && <button type="button" className="btn-delete" onClick={() => removeItem(idx)}>Eliminar</button>}
+                        </div>
+                    ))}
+                    <div className="form-actions">
+                        <button type="button" className="btn-new" onClick={addItem}>Agregar Ítem</button>
                     </div>
 
                     <div className="form-group">
@@ -108,20 +127,6 @@ function SaleFormPage() {
                         </select>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="cantidad">Cantidad:</label>
-                        <input type="number" id="cantidad" name="cantidad" min="1" required value={quantity} onChange={e => setQuantity(e.target.value)} />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="tax">IVA:</label>
-                        <input type="number" id="tax" step="0.01" min="0" value={tax} onChange={e => setTax(e.target.value)} />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="discount">Descuento:</label>
-                        <input type="number" id="discount" step="0.01" min="0" value={discount} onChange={e => setDiscount(e.target.value)} />
-                    </div>
 
                     <div className="form-group">
                         <label htmlFor="metodo-pago">Método de Pago:</label>
