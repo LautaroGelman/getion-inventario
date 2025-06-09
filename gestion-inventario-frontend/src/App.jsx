@@ -10,6 +10,7 @@ import ClientFormPage from "./pages/ClientFormPage.jsx"; // <-- IMPORTAMOS
 import EndCustomerFormPage from './pages/EndCustomerFormPage';
 import PurchaseOrderFormPage from './pages/PurchaseOrderFormPage';
 import PurchaseOrderDetailPage from './pages/PurchaseOrderDetailPage';
+import EmployeeFormPage from './pages/EmployeeFormPage';
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/form-end-customer/:customerId" element={<ProtectedRoute><EndCustomerFormPage /></ProtectedRoute>} />
             <Route path="/form-orden-compra" element={<ProtectedRoute><PurchaseOrderFormPage /></ProtectedRoute>} />
             <Route path="/detalle-orden-compra/:purchaseOrderId" element={<ProtectedRoute><PurchaseOrderDetailPage /></ProtectedRoute>} />
+            <Route path="/empleados/nuevo" element={<ProtectedRoute><EmployeeFormPage /></ProtectedRoute>} />
             {/* --- RUTA ACTUALIZADA PARA EL PANEL DE ADMIN --- */}
             <Route path="/panel-admin" element={<ProtectedRoute><AdminPanelPage /></ProtectedRoute>} />
 

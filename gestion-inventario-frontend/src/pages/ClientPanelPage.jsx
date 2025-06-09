@@ -63,7 +63,7 @@ function ClientPanelPage() {
                 <nav>
                     {/* Los botones ahora llaman a handleSectionChange para actualizar la URL */}
                     <button onClick={() => handleSectionChange('dashboard')}>Dashboard</button>
-                    {role === 'ADMIN' && (
+                    {role === 'MANAGER' && (
                         <>
                             <button onClick={() => handleSectionChange('inventario')}>Inventario</button>
                             <button onClick={() => handleSectionChange('compras')}>Compras</button>
