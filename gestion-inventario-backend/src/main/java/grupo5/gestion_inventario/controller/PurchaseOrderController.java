@@ -11,33 +11,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/purchase-orders")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173") // Permitir peticiones desde el frontend de React
 public class PurchaseOrderController {
 
     @Autowired
     private PurchaseOrderService purchaseOrderService;
 
-    @GetMapping
-    public ResponseEntity<List<PurchaseOrder>> getAllPurchaseOrders() {
-        List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrders();
+    @GetMapping("/clients/{clientId}/purchase-orders")
+    public ResponseEntity<List<PurchaseOrder>> getAllPurchaseOrders(@PathVariable Long clientId) {
+        List<PurchaseOrder> purchaseOrders = purchaseOrderService.getAllPurchaseOrders(clientId);
         return ResponseEntity.ok(purchaseOrders);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/purchase-orders/{id}")
     public ResponseEntity<PurchaseOrder> getPurchaseOrderById(@PathVariable Long id) {
         return purchaseOrderService.getPurchaseOrderById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
+    @PostMapping("/purchase-orders")
     public ResponseEntity<PurchaseOrder> createPurchaseOrder(@RequestBody PurchaseOrderRequest request) {
         PurchaseOrder newPurchaseOrder = purchaseOrderService.createPurchaseOrder(request);
         return new ResponseEntity<>(newPurchaseOrder, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{id}/receive")
+    @PostMapping("/purchase-orders/{id}/receive")
     public ResponseEntity<PurchaseOrder> receivePurchaseOrder(@PathVariable Long id) {
         PurchaseOrder updatedPurchaseOrder = purchaseOrderService.receivePurchaseOrder(id);
         return ResponseEntity.ok(updatedPurchaseOrder);
