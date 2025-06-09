@@ -82,3 +82,33 @@
     color: #d32f2f;
     text-align: center;
 }
+
+.btn-new {
+    background-color: #0480a3;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-new:hover {
+    background-color: #036d8b;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
