@@ -22,6 +22,10 @@ public class EmployeeService {
         this.repo = repo;
         this.clientRepo = clientRepo;
         this.passwordEncoder = passwordEncoder;
+
+    public EmployeeService(EmployeeRepository repo, ClientRepository clientRepo) {
+        this.repo = repo;
+        this.clientRepo = clientRepo;
     }
 
     public Employee create(Long clientId, Employee e) {

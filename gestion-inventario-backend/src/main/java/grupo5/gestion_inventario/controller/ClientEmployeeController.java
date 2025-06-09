@@ -28,6 +28,9 @@ public class ClientEmployeeController {
         List<EmployeeDto> list = service.listByClient(clientId).stream()
                 .map(emp -> new EmployeeDto(emp.getId(), emp.getName(), emp.getEmail(), emp.getRole()))
                 .toList();
+    public ResponseEntity<List<Employee>> list(Authentication auth) {
+        Long clientId = (Long) auth.getDetails();
+        List<Employee> list = service.listByClient(clientId);
         return ResponseEntity.ok(list);
     }
 
@@ -39,6 +42,11 @@ public class ClientEmployeeController {
         Employee created = service.create(clientId, e);
         EmployeeDto dto = new EmployeeDto(created.getId(), created.getName(), created.getEmail(), created.getRole());
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+    public ResponseEntity<Employee> create(@RequestBody Employee e,
+                                           Authentication auth) {
+        Long clientId = (Long) auth.getDetails();
+        Employee created = service.create(clientId, e);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @DeleteMapping("/{id}")
