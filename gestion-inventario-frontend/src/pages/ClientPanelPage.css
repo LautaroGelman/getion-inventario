@@ -1,0 +1,90 @@
+.client-panel-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.panel-header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.panel-header h1 {
+    font-size: 1.8rem;
+    color: #0480a3;
+    font-weight: 600;
+    margin: 0;
+}
+
+.panel-header nav {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+}
+
+.panel-header nav button {
+    background-color: transparent;
+    border: none;
+    color: #555555;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.panel-header nav button:hover {
+    background-color: rgba(4, 128, 163, 0.1);
+    color: #0480a3;
+}
+
+#logout-btn {
+    background-color: #e74c3c;
+    color: #ffffff;
+}
+
+#logout-btn:hover {
+    background-color: #c0392b;
+}
+
+.panel-main-content {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sidebar-footer .cash-button {
+    background-color: #4CAF50; /* Color verde para la acción de caja */
+    color: white;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.sidebar-footer .cash-button:hover {
+    background-color: #45a049;
+}
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    /* --- NUEVOS ESTILOS --- */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+}
+
+.header-actions {
+    /* Contenedor para futuras acciones como notificaciones, etc. */
+}

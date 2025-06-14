@@ -1,0 +1,40 @@
+.admin-dashboard header h1 {
+    font-size: 1.5rem;
+    color: #333333;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.card {
+    flex: 1 1 calc(25% - 20px);
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(4, 128, 163, 0.2);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s ease;
+    min-width: 180px;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #555555;
+}
+
+.card p {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #0480a3;
+    font-weight: 600;
+}

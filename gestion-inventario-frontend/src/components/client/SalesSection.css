@@ -1,0 +1,76 @@
+.sales-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sales-section h2 {
+    font-size: 1.5rem;
+    color: #0480a3;
+    font-weight: 600;
+    margin: 0;
+}
+.sales-section .btn-action {
+    background-color: #f44336; /* Un color distintivo para la acción de devolver */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sales-section .btn-action:hover {
+    background-color: #d32f2f;
+}
+
+.sales-section .btn-new {
+    background-color: #0480a3;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sales-section .btn-new:hover {
+    background-color: #036d8b;
+}
+
+.sales-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.sales-section th,
+.sales-section td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #555555;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sales-section th {
+    background-color: #0480a3;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.sales-section tr:hover {
+    background-color: #f4f9fb;
+}
+
+.sales-section tr:last-child td {
+    border-bottom: none;
+}
