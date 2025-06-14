@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCashSession } from '../hooks/useCashSession';
 import CashSessionModal from '../components/client/CashSessionModal';
-import Notifications from '../components/client/Notifications';
+import Notifications from '../components/Notifications'; // Ruta corregida
 import DashboardSection from '../components/client/DashboardSection';
 import InventorySection from '../components/client/InventorySection';
 import SalesSection from '../components/client/SalesSection';
