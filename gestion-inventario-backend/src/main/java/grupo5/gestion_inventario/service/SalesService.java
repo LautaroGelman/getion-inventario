@@ -8,8 +8,10 @@ import grupo5.gestion_inventario.clientpanel.model.Sale;
 import grupo5.gestion_inventario.clientpanel.model.SaleItem;
 import grupo5.gestion_inventario.clientpanel.repository.SaleRepository;
 import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee; // IMPORT AÑADIDO
 import grupo5.gestion_inventario.model.Product;
 import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository; // IMPORT AÑADIDO
 import grupo5.gestion_inventario.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,43 +28,46 @@ import java.util.stream.Collectors;
 public class SalesService {
 
     private final SaleRepository saleRepo;
-    private final ClientRepository  clientRepo;
+    private final ClientRepository clientRepo;
     private final ProductRepository productRepo;
+    private final EmployeeRepository employeeRepo; // REPOSITORIO AÑADIDO
 
     public SalesService(SaleRepository saleRepo,
                         ClientRepository clientRepo,
-                        ProductRepository productRepo) {
+                        ProductRepository productRepo,
+                        EmployeeRepository employeeRepo) { // INYECCIÓN AÑADIDA
         this.saleRepo    = saleRepo;
         this.clientRepo  = clientRepo;
         this.productRepo = productRepo;
+        this.employeeRepo = employeeRepo; // ASIGNACIÓN AÑADIDA
     }
-
-    /* ─────────────────── NUEVA VENTA (CORREGIDO PARA TU CONTROLADOR) ─────────────────── */
 
     @Transactional
     public SaleDto createSale(Long clientId, SaleRequest req) {
 
-        System.out.println("--- FECHA RECIBIDA EN EL SERVICIO: " + req.getSaleDate() + " ---");
-
         Client client = clientRepo.findById(clientId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Cliente no encontrado: " + clientId));
+                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado: " + clientId));
 
-        Sale sale = new Sale(client, req.getPaymentMethod(), req.getSaleDate());
+        // Se busca el empleado que realiza la venta
+        Employee employee = employeeRepo.findById(req.getEmployeeId())
+                .orElseThrow(() -> new IllegalArgumentException("Empleado no encontrado: " + req.getEmployeeId()));
+
+        // Se pasa el empleado al constructor de Sale
+        Sale sale = new Sale(client, employee, req.getPaymentMethod(), req.getSaleDate());
 
         req.getItems().forEach(itemRequest -> {
             Product product = productRepo.findById(itemRequest.getProductId())
-                    .orElseThrow(() ->
-                            new IllegalArgumentException("Producto no encontrado (ID): " + itemRequest.getProductId()));
+                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado (ID): " + itemRequest.getProductId()));
 
-            int newStock = product.getStockQuantity() - itemRequest.getQuantity();
+            // CORRECCIÓN: Usar getQuantity y setQuantity
+            int newStock = product.getQuantity() - itemRequest.getQuantity();
             if (newStock < 0) {
                 throw new IllegalArgumentException(
                         "No hay suficiente stock de " + product.getName());
             }
-            product.setStockQuantity(newStock);
+            product.setQuantity(newStock);
 
-            SaleItem item = new SaleItem(product, itemRequest.getQuantity(), itemRequest.getUnitPrice());
+            SaleItem item = new SaleItem(product, itemRequest.getQuantity(), product.getPrice());
             sale.addItem(item);
         });
 
@@ -111,14 +116,18 @@ public class SalesService {
     }
 
     private SaleDto toDto(Sale s) {
+        // Asumiendo que SaleDto puede manejar múltiples items
+        String itemNames = s.getItems().stream()
+                .map(item -> item.getProduct().getName())
+                .collect(Collectors.joining(", "));
+        int totalQuantity = s.getItems().stream()
+                .mapToInt(SaleItem::getQuantity)
+                .sum();
+
         return new SaleDto(
                 s.getClient().getName(),
-                s.getItems().isEmpty()
-                        ? ""
-                        : s.getItems().get(0).getProduct().getName(),
-                s.getItems().isEmpty()
-                        ? 0
-                        : s.getItems().get(0).getQuantity(),
+                itemNames,
+                totalQuantity,
                 s.getTotalAmount(),
                 s.getPaymentMethod(),
                 s.getCreatedAt()
@@ -152,7 +161,6 @@ public class SalesService {
         return result;
     }
 
-    // --- ¡NUEVO MÉTODO AÑADIDO AQUÍ! ---
     @Transactional(readOnly = true)
     public List<ProfitabilitySummaryDto> getProfitabilitySummaryLastDays(Long clientId, int days) {
         if (!clientRepo.existsById(clientId)) {
@@ -162,14 +170,13 @@ public class SalesService {
         LocalDate startDate = LocalDate.now().minusDays(days - 1);
         List<Object[]> rawData = saleRepo.findDailyProfitabilitySummaryNative(clientId, startDate.atStartOfDay());
 
-        // Mapeamos los resultados por fecha para una búsqueda fácil
         Map<LocalDate, ProfitabilitySummaryDto> map = rawData.stream()
                 .collect(Collectors.toMap(
-                        row -> ((java.sql.Date) row[0]).toLocalDate(), // Clave: Fecha
+                        row -> ((java.sql.Date) row[0]).toLocalDate(),
                         row -> {
                             BigDecimal revenue = (BigDecimal) row[1];
                             BigDecimal cost = (BigDecimal) row[2];
-                            BigDecimal profit = revenue.subtract(cost); // Cálculo de la ganancia
+                            BigDecimal profit = revenue.subtract(cost);
                             return new ProfitabilitySummaryDto(
                                     ((java.sql.Date) row[0]).toLocalDate(),
                                     revenue,
@@ -179,7 +186,6 @@ public class SalesService {
                         }
                 ));
 
-        // Rellenamos los días sin ventas para asegurar un rango de fechas continuo para el gráfico
         List<ProfitabilitySummaryDto> result = new ArrayList<>();
         for (int i = 0; i < days; i++) {
             LocalDate day = startDate.plusDays(i);

@@ -1,12 +1,35 @@
 package grupo5.gestion_inventario.clientpanel.dto;
 
-public class ReturnItemRequest {
-    private int productId;
-    private int quantity;
+import java.math.BigDecimal;
 
-    // Getters y Setters
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+public class ReturnItemRequest {
+    private Long productId; // TIPO CORREGIDO de int a Long
+    private int quantity;
+    private String reason; // CAMPO AÑADIDO
+
+    // GETTERS Y SETTERS
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getReason() { // MÉTODO AÑADIDO
+        return reason;
+    }
+
+    public void setReason(String reason) { // MÉTODO AÑADIDO
+        this.reason = reason;
+    }
 }

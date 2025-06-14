@@ -74,6 +74,5 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
                 @Param("startDate") LocalDateTime startDate,
                 @Param("endDate") LocalDateTime endDate
         );
-    }
-
 }
+

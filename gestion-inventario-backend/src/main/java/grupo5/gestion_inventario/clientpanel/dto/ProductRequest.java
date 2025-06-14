@@ -1,4 +1,3 @@
-// src/main/java/grupo5/gestion_inventario/clientpanel/dto/ProductRequest.java
 package grupo5.gestion_inventario.clientpanel.dto;
 
 import java.math.BigDecimal;
@@ -7,9 +6,9 @@ public class ProductRequest {
     private String code;
     private String name;
     private String description;
-    private BigDecimal cost; // <-- AÑADIDO
+    private BigDecimal cost;
     private BigDecimal price;
-    private Integer stockQuantity;
+    private int quantity; // CAMPO Y TIPO CORREGIDOS
     private Integer lowStockThreshold;
 
     public ProductRequest() {}
@@ -24,16 +23,16 @@ public class ProductRequest {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    // --- GETTER Y SETTER PARA COST ---
     public BigDecimal getCost() { return cost; }
     public void setCost(BigDecimal cost) { this.cost = cost; }
-    // ---------------------------------
 
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
 
-    public Integer getStockQuantity() { return stockQuantity; }
-    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+    // --- MÉTODOS CORREGIDOS ---
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    // -------------------------
 
     public Integer getLowStockThreshold() { return lowStockThreshold; }
     public void setLowStockThreshold(Integer lowStockThreshold) { this.lowStockThreshold = lowStockThreshold; }

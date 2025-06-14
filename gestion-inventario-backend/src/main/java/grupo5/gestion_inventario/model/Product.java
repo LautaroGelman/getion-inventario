@@ -31,11 +31,15 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
+    // --- CAMPO ESTANDARIZADO ---
+    // Renombrado de 'stockQuantity' a 'quantity' y tipo cambiado a 'int' para consistencia
     @Column(nullable = false)
-    private Integer stockQuantity;
+    private int quantity;
 
+    // --- CAMPO ESTANDARIZADO ---
+    // Tipo cambiado a 'int' para consistencia
     @Column(nullable = false)
-    private Integer lowStockThreshold;
+    private int lowStockThreshold;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
@@ -46,20 +50,21 @@ public class Product {
 
     public Product() {}
 
+    // Constructor actualizado con los nombres y tipos corregidos
     public Product(String code,
                    String name,
                    String description,
                    BigDecimal cost,
                    BigDecimal price,
-                   Integer stockQuantity,
-                   Integer lowStockThreshold,
+                   int quantity, // TIPO Y NOMBRE CORREGIDO
+                   int lowStockThreshold, // TIPO CORREGIDO
                    Client client) {
         this.code              = code;
         this.name              = name;
         this.description       = description;
         this.cost              = cost;
         this.price             = price;
-        this.stockQuantity     = stockQuantity;
+        this.quantity          = quantity; // CAMPO CORREGIDO
         this.lowStockThreshold = lowStockThreshold;
         this.client            = client;
     }
@@ -109,17 +114,18 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getStockQuantity() {
-        return stockQuantity;
+    // --- MÉTODOS ESTANDARIZADOS ---
+    public int getQuantity() {
+        return quantity;
     }
-    public void setStockQuantity(Integer stockQuantity) {
-        this.stockQuantity = stockQuantity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public Integer getLowStockThreshold() {
+    public int getLowStockThreshold() {
         return lowStockThreshold;
     }
-    public void setLowStockThreshold(Integer lowStockThreshold) {
+    public void setLowStockThreshold(int lowStockThreshold) {
         this.lowStockThreshold = lowStockThreshold;
     }
 

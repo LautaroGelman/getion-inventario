@@ -1,4 +1,3 @@
-// src/main/java/grupo5/gestion_inventario/superpanel/repository/CustomerAccountRepository.java
 package grupo5.gestion_inventario.superpanel.repository;
 
 import grupo5.gestion_inventario.superpanel.model.CustomerAccount;
@@ -14,6 +13,7 @@ public interface CustomerAccountRepository extends JpaRepository<CustomerAccount
     @Query("SELECT COUNT(p) FROM Product p")
     long countAllProducts();
 
-    @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity <= p.lowStockThreshold")
+    // CORRECCIÓN: Se actualizó p.stockQuantity a p.quantity para que coincida con la entidad Product.
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.quantity <= p.lowStockThreshold")
     long countLowStock();
 }

@@ -34,29 +34,28 @@ public class ProductService {
         product.setDescription(req.getDescription());
         product.setCost(req.getCost());
         product.setPrice(req.getPrice());
-        product.setStockQuantity(req.getStockQuantity());
+        // CORRECCIÓN: Usar el método estandarizado setQuantity
+        product.setQuantity(req.getQuantity());
         product.setLowStockThreshold(
                 req.getLowStockThreshold() != null ? req.getLowStockThreshold() : 0
         );
 
         Product saved = productRepo.save(product);
-        return toDto(saved); // Usamos un helper para la conversión
+        return toDto(saved);
     }
 
-    // --- NUEVO MÉTODO PARA ACTUALIZAR UN PRODUCTO ---
     @Transactional
     public Optional<ProductDto> updateProduct(Long productId, ProductRequest req, Client client) {
         return productRepo.findById(productId)
-                // Nos aseguramos de que el producto pertenezca al cliente autenticado
                 .filter(product -> product.getClient().getId().equals(client.getId()))
                 .map(product -> {
-                    // Actualizamos todos los campos desde la petición
                     product.setCode(req.getCode());
                     product.setName(req.getName());
                     product.setDescription(req.getDescription());
                     product.setCost(req.getCost());
                     product.setPrice(req.getPrice());
-                    product.setStockQuantity(req.getStockQuantity());
+                    // CORRECCIÓN: Usar el método estandarizado setQuantity
+                    product.setQuantity(req.getQuantity());
                     product.setLowStockThreshold(
                             req.getLowStockThreshold() != null ? req.getLowStockThreshold() : 0
                     );
@@ -71,27 +70,26 @@ public class ProductService {
             throw new IllegalArgumentException("Cliente no encontrado: " + clientId);
         }
         return productRepo.findByClientId(clientId).stream()
-                .map(this::toDto) // Usamos el helper
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    // --- NUEVO MÉTODO PARA BUSCAR UN ÚNICO DTO ---
     @Transactional(readOnly = true)
     public Optional<ProductDto> findDtoByIdAndClient(Long productId, Client client) {
         return productRepo.findById(productId)
                 .filter(product -> product.getClient().getId().equals(client.getId()))
-                .map(this::toDto); // Usamos el helper
+                .map(this::toDto);
     }
-    // --- NUEVO MÉTODO PARA ELIMINAR UN PRODUCTO ---
+
     @Transactional
     public boolean deleteProduct(Long productId, Client client) {
         return productRepo.findById(productId)
-                .filter(product -> product.getClient().getId().equals(client.getId())) // Verificación de propiedad
+                .filter(product -> product.getClient().getId().equals(client.getId()))
                 .map(product -> {
                     productRepo.delete(product);
-                    return true; // Eliminación exitosa
+                    return true;
                 })
-                .orElse(false); // El producto no existe o no pertenece al cliente
+                .orElse(false);
     }
 
     @Transactional(readOnly = true)
@@ -102,16 +100,15 @@ public class ProductService {
         return productRepo.countLowStock(clientId);
     }
 
-    // --- HELPER PRIVADO PARA CONVERTIR ENTIDAD A DTO ---
-    // Esto evita repetir código y asegura que la conversión sea siempre la misma.
     private ProductDto toDto(Product p) {
         return new ProductDto(
                 p.getId(),
                 p.getCode(),
                 p.getName(),
                 p.getDescription(),
-                p.getStockQuantity(),
-                p.getCost(), // <-- campo de costo añadido a la conversión
+                // CORRECCIÓN: Usar el método estandarizado getQuantity
+                p.getQuantity(),
+                p.getCost(),
                 p.getPrice()
         );
     }

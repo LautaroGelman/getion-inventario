@@ -2,6 +2,7 @@ package grupo5.gestion_inventario.clientpanel.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee; // IMPORTACIÓN AÑADIDA
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,39 +30,53 @@ public class Sale {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
+    // --- RELACIÓN AÑADIDA ---
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
+
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<SaleItem> items = new ArrayList<>();
 
-    // --- Constructores Corregidos ---
+    // --- Constructores Corregidos y Actualizados ---
 
-    /**
-     * Constructor por defecto.
-     * Se elimina la asignación de 'createdAt' para que se pueda establecer después.
-     */
     public Sale() {
         this.totalAmount = BigDecimal.ZERO;
     }
 
-    /**
-     * Constructor completo. Ahora acepta la fecha de la venta como parámetro.
-     */
     public Sale(String paymentMethod,
                 BigDecimal totalAmount,
                 Client client,
+                Employee employee, // PARÁMETRO AÑADIDO
                 List<SaleItem> items,
-                LocalDateTime saleDate) { // <-- PARÁMETRO AÑADIDO
-        // Usa la fecha recibida. Si es nula, usa la actual como respaldo.
+                LocalDateTime saleDate) {
         this.createdAt     = (saleDate != null) ? saleDate : LocalDateTime.now();
         this.paymentMethod = paymentMethod;
         this.totalAmount   = totalAmount != null ? totalAmount : BigDecimal.ZERO;
         this.client        = client;
+        this.employee      = employee; // ASIGNACIÓN AÑADIDA
         if (items != null) {
             setItems(items);
         }
     }
 
-    // --- Getters y Setters (se mantienen igual) ---
+    /**
+     * Constructor para usar en el servicio. Ahora acepta el empleado y la fecha.
+     * @param client El cliente que realiza la compra.
+     * @param employee El empleado que registra la venta.
+     * @param paymentMethod El método de pago.
+     * @param saleDate La fecha de la venta (puede ser nula, en cuyo caso se usa la actual).
+     */
+    public Sale(Client client, Employee employee, String paymentMethod, LocalDateTime saleDate) {
+        this.client = client;
+        this.employee = employee; // ASIGNACIÓN AÑADIDA
+        this.paymentMethod = paymentMethod;
+        this.createdAt = (saleDate != null) ? saleDate : LocalDateTime.now();
+        this.totalAmount = BigDecimal.ZERO;
+    }
+
+    // --- Getters y Setters ---
 
     public Long getId()                     { return id; }
     public LocalDateTime getCreatedAt()     { return createdAt; }
@@ -76,6 +91,9 @@ public class Sale {
     public Client getClient()               { return client; }
     public void setClient(Client client)    { this.client = client; }
 
+    public Employee getEmployee()           { return employee; } // GETTER AÑADIDO
+    public void setEmployee(Employee employee) { this.employee = employee; } // SETTER AÑADIDO
+
     public List<SaleItem> getItems()        { return items; }
 
     public void setItems(List<SaleItem> items) {
@@ -88,7 +106,7 @@ public class Sale {
         }
     }
 
-    // --- Helpers (se mantienen igual) ---
+    // --- Helpers ---
 
     public void addItem(SaleItem item) {
         item.setSale(this);
@@ -105,21 +123,5 @@ public class Sale {
                     item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()))
             );
         }
-    }
-
-    // En tu archivo Sale.java
-
-    /**
-     * Constructor para usar en el servicio. Ahora acepta la fecha.
-     * @param client El cliente que realiza la compra.
-     * @param paymentMethod El método de pago.
-     * @param saleDate La fecha de la venta (puede ser nula, en cuyo caso se usa la actual).
-     */
-    public Sale(Client client, String paymentMethod, LocalDateTime saleDate) {
-        this.client = client;
-        this.paymentMethod = paymentMethod;
-        // Usa la fecha recibida. Si es nula, usa la fecha/hora actual como respaldo.
-        this.createdAt = (saleDate != null) ? saleDate : LocalDateTime.now();
-        this.totalAmount = BigDecimal.ZERO;
     }
 }

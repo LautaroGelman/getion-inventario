@@ -16,10 +16,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     /** Productos cuyo stock está en o por debajo del umbral configurado */
     @Query("""
         SELECT COUNT(p) FROM Product p
-        WHERE p.client.id       = :clientId
-          AND p.stockQuantity   <= p.lowStockThreshold
+        WHERE p.client.id = :clientId
+          AND p.quantity <= p.lowStockThreshold
     """)
-    long countLowStock(@Param("clientId") Long clientId);
+    long countLowStock(@Param("clientId") Long clientId); // CORRECCIÓN EN LA QUERY: p.stockQuantity -> p.quantity
 
     Optional<Product> findByCode(String code);
 

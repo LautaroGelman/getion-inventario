@@ -30,7 +30,8 @@ public class StockAlertScheduler {
         List<Product> products = productRepository.findAll();
 
         for (Product product : products) {
-            if (product.getStockQuantity() <= product.getLowStockThreshold()) {
+            // CORRECCIÓN: Usar el método estandarizado getQuantity()
+            if (product.getQuantity() <= product.getLowStockThreshold()) {
                 // Verificar si ya existe una alerta de stock bajo no leída para este producto
                 alertRepository.findFirstByProductAndIsReadFalse(product).ifPresentOrElse(
                         (alert) -> {
@@ -43,7 +44,8 @@ public class StockAlertScheduler {
                             newAlert.setClient(product.getClient());
                             newAlert.setProduct(product);
                             newAlert.setType("LOW_STOCK");
-                            newAlert.setMessage("El producto '" + product.getName() + "' tiene bajo stock (" + product.getStockQuantity() + " unidades restantes).");
+                            // CORRECCIÓN: Usar el método estandarizado getQuantity()
+                            newAlert.setMessage("El producto '" + product.getName() + "' tiene bajo stock (" + product.getQuantity() + " unidades restantes).");
                             alertRepository.save(newAlert);
                         }
                 );

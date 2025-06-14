@@ -3,6 +3,7 @@ package grupo5.gestion_inventario.clientpanel.model;
 import grupo5.gestion_inventario.model.Client;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class PurchaseOrder {
     private BigDecimal totalCost;
 
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PurchaseOrderItem> items;
+    private List<PurchaseOrderItem> items = new ArrayList<>(); // Inicializado para evitar NullPointerException
 
     public enum PurchaseOrderStatus {
         PENDING,
@@ -49,6 +50,7 @@ public class PurchaseOrder {
     protected void onCreate() {
         this.orderDate = new Date();
         this.status = PurchaseOrderStatus.PENDING;
+        this.totalCost = BigDecimal.ZERO; // Inicializar el costo total
     }
 
     // Getters y Setters
@@ -115,5 +117,20 @@ public class PurchaseOrder {
 
     public void setItems(List<PurchaseOrderItem> items) {
         this.items = items;
+    }
+
+    // --- MÉTODO HELPER AÑADIDO ---
+    public void addItem(PurchaseOrderItem item) {
+        if (this.items == null) {
+            this.items = new ArrayList<>();
+        }
+        items.add(item);
+        item.setPurchaseOrder(this); // Mantiene la consistencia de la relación
+        // Recalcula el costo total
+        if (this.totalCost == null) {
+            this.totalCost = BigDecimal.ZERO;
+        }
+        BigDecimal itemCost = item.getCost().multiply(new BigDecimal(item.getQuantity()));
+        this.totalCost = this.totalCost.add(itemCost);
     }
 }

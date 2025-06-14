@@ -6,7 +6,6 @@ import grupo5.gestion_inventario.service.SaleReturnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,9 +18,9 @@ public class SaleReturnController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'CAJERO', 'MULTIFUNCION')")
-    public ResponseEntity<SaleReturn> createReturn(@RequestBody SaleReturnRequest saleReturnRequest, Authentication authentication) {
-        String employeeEmail = authentication.getName();
-        SaleReturn createdReturn = saleReturnService.processReturn(saleReturnRequest, employeeEmail);
+    public ResponseEntity<SaleReturn> createReturn(@RequestBody SaleReturnRequest saleReturnRequest) {
+        // se maneja con @PreAuthorize.
+        SaleReturn createdReturn = saleReturnService.createSaleReturn(saleReturnRequest);
         return ResponseEntity.ok(createdReturn);
     }
 }

@@ -1,6 +1,6 @@
 package grupo5.gestion_inventario.config;
 
-import grupo5.gestion_inventario.model.Employee; // <-- AÑADIDO
+import grupo5.gestion_inventario.model.Employee;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -30,6 +30,12 @@ public class JwtUtil {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
+    // --- MÉTODO AÑADIDO PARA EXTRAER EL CLIENT ID ---
+    public Long extractClientId(String token) {
+        // Obtenemos el claim 'clientId' y lo convertimos a Long
+        return getClaimFromToken(token, claims -> claims.get("clientId", Long.class));
+    }
+
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
@@ -44,19 +50,17 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    // MÉTODO ORIGINAL (LO CONSERVAMOS POR COMPATIBILIDAD SI LO NECESITAS)
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
     }
 
-    // !! NUEVO MÉTODO PARA GENERAR TOKEN CON ROLES Y DATOS DEL NEGOCIO !!
     public String generateToken(Employee employee) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", employee.getRole().name());
         claims.put("clientId", employee.getClient().getId());
         claims.put("employeeName", employee.getName());
-        return createToken(claims, employee.getUsername()); // El "subject" del token sigue siendo el email
+        return createToken(claims, employee.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {

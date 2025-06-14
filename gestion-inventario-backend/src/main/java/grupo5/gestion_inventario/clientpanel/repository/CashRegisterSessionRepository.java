@@ -1,10 +1,10 @@
-// src/main/java/grupo5/gestion_inventario/clientpanel/repository/CashRegisterSessionRepository.java
 package grupo5.gestion_inventario.clientpanel.repository;
+
+import grupo5.gestion_inventario.clientpanel.model.CashRegisterSession;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import grupo5.gestion_inventario.clientpanel.model.CashRegisterSession;
 
 public interface CashRegisterSessionRepository extends JpaRepository<CashRegisterSession, Long> {
 
@@ -14,7 +14,13 @@ public interface CashRegisterSessionRepository extends JpaRepository<CashRegiste
     List<CashRegisterSession> findByClientId(Long clientId);
 
     /**
-     * La sesión de caja abierta (closedAt is null) de un cliente, si existe.
+     * La sesión de caja abierta (closingTime is null) de un cliente, si existe.
+     * CORRECCIÓN: Renombrado de 'ClosedAt' a 'ClosingTime' para coincidir con la entidad.
      */
-    Optional<CashRegisterSession> findByClientIdAndClosedAtIsNull(Long clientId);
+    Optional<CashRegisterSession> findByClientIdAndClosingTimeIsNull(Long clientId);
+
+    /**
+     * Encuentra una sesión de caja por el ID del empleado y su estado (p. ej., "OPEN").
+     */
+    Optional<CashRegisterSession> findByEmployeeIdAndStatus(Long employeeId, String status);
 }

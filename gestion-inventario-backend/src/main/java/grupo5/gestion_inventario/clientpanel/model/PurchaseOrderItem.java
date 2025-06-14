@@ -28,7 +28,26 @@ public class PurchaseOrderItem {
     @Column(nullable = false)
     private BigDecimal cost;
 
-    // Getters y Setters
+    // --- CONSTRUCTORES AÑADIDOS ---
+
+    /**
+     * Constructor por defecto requerido por JPA.
+     */
+    public PurchaseOrderItem() {
+    }
+
+    /**
+     * Constructor para crear un nuevo ítem de orden de compra desde el servicio.
+     */
+    public PurchaseOrderItem(PurchaseOrder purchaseOrder, Product product, int quantity, BigDecimal cost) {
+        this.purchaseOrder = purchaseOrder;
+        this.product = product;
+        this.quantity = quantity;
+        this.cost = cost;
+    }
+
+
+    // --- Getters y Setters (se mantienen igual) ---
 
     public Long getId() {
         return id;
