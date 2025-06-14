@@ -17,7 +17,7 @@ function LoginPage() {
 
         try {
             // La llamada a la API es la misma
-            const response = await api.post('/auth/login', { username, password });
+            const response = await api.post('/api/auth/login', { username, password });
 
             // Esperamos una respuesta como { "token": "ey..." }
             const token = response.data.token;

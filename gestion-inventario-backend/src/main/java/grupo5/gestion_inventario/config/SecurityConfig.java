@@ -1,6 +1,9 @@
+// src/main/java/grupo5/gestion_inventario/config/SecurityConfig.java
 package grupo5.gestion_inventario.config;
 
+import grupo5.gestion_inventario.security.ClientUserDetailsService;
 import grupo5.gestion_inventario.security.CustomUserDetailsService;
+import grupo5.gestion_inventario.superpanel.service.AdminUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,17 +18,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import grupo5.gestion_inventario.config.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true) // Habilitamos @PreAuthorize
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private
+    ClientUserDetailsService clientService;        // ← nuevo
+
 
     @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter; // <-- Inyectamos nuestro filtro
+    private CustomUserDetailsService employeeService;
+
+    @Autowired
+    private AdminUserDetailsService adminService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,24 +46,35 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        return authBuilder.build();
+        AuthenticationManagerBuilder auth =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        auth.userDetailsService(employeeService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(adminService) .passwordEncoder(passwordEncoder());
+        auth.userDetailsService(clientService) .passwordEncoder(passwordEncoder());  // ← tercer provider
+
+        return auth.build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**", "/superpanel/login").permitAll() // <-- Permite acceso al login
-                        .requestMatchers(HttpMethod.POST, "/api/clients").permitAll() // Permitir creación de clientes
-                        .anyRequest().authenticated() // Todas las demás peticiones requieren autenticación
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/**",      // login empleados
+                                "/superpanel/login", // login admins
+                                "/actuator/**"
+                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/clients").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(sess ->
+                        sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
 
-        // AÑADIMOS EL FILTRO JWT ANTES DEL FILTRO DE AUTENTICACIÓN ESTÁNDAR
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

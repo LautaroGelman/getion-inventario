@@ -1,17 +1,20 @@
 package grupo5.gestion_inventario.controller;
 
 import grupo5.gestion_inventario.config.JwtUtil;
-import grupo5.gestion_inventario.model.Employee; // <-- AÑADIDO
-import grupo5.gestion_inventario.repository.EmployeeRepository; // <-- AÑADIDO
+import grupo5.gestion_inventario.model.Client;
+import grupo5.gestion_inventario.model.Employee;
+import grupo5.gestion_inventario.repository.ClientRepository;
+import grupo5.gestion_inventario.repository.EmployeeRepository;
 import grupo5.gestion_inventario.clientpanel.dto.AuthRequest;
 import grupo5.gestion_inventario.clientpanel.dto.AuthResponse;
+import grupo5.gestion_inventario.superpanel.model.AdminUser;
+import grupo5.gestion_inventario.superpanel.repository.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,24 +29,45 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private EmployeeRepository employeeRepository; // <-- AÑADIDO
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private AdminUserRepository adminUserRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<AuthResponse> createAuthenticationToken(@RequestBody AuthRequest req) throws Exception {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword()));
 
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
-        );
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String username = req.getUsername();
+        String token;
 
-        // AHORA BUSCAMOS AL EMPLEADO PARA OBTENER TODOS SUS DATOS
-        final Employee employee = employeeRepository.findByEmail(authRequest.getUsername())
-                .orElseThrow(() -> new Exception("Error al buscar empleado post-autenticación"));
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boolean isClient = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT"));
 
-        // USAMOS EL NUEVO MÉTODO PARA GENERAR EL TOKEN
-        final String jwt = jwtUtil.generateToken(employee);
+        if (isAdmin) {
+            AdminUser admin = adminUserRepository.findByUsername(username)
+                    .orElseThrow(() -> new Exception("Admin no encontrado: " + username));
+            token = jwtUtil.generateToken(admin);
 
-        return ResponseEntity.ok(new AuthResponse(jwt));
+        } else if (isClient) {
+            Client client = clientRepository.findByEmail(username)
+                    .orElseThrow(() -> new Exception("Cliente no encontrado: " + username));
+            token = jwtUtil.generateToken(client);
+
+        } else { // Empleado
+            Employee emp = employeeRepository.findByEmail(username)
+                    .orElseThrow(() -> new Exception("Empleado no encontrado: " + username));
+            token = jwtUtil.generateToken(emp);
+        }
+
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }
