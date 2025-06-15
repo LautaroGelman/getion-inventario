@@ -1,0 +1,99 @@
+.inventory-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.inventory-section h2 {
+    font-size: 1.5rem;
+    color: #0480a3;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-new {
+    background-color: #0480a3;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-new:hover {
+    background-color: #036d8b;
+}
+
+.inventory-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.inventory-section th,
+.inventory-section td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #555555;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.inventory-section th {
+    background-color: #0480a3;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.inventory-section tr:hover {
+    background-color: #f4f9fb;
+}
+
+.inventory-section tr:last-child td {
+    border-bottom: none;
+}
+
+.inventory-section .btn-edit,
+.inventory-section .btn-delete {
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    color: white;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+}
+.btn-edit:hover {
+    background-color: #e0a800;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+}
+.btn-delete:hover {
+    background-color: #c82333;
+}
+.search-bar-container {
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
