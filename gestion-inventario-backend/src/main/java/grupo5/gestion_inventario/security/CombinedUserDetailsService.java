@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
  * primero en admins, luego empleados, luego clients.
  * Lo usamos desde el JwtAuthenticationFilter.
  */
+/*
 @Service
 @Primary
 public class CombinedUserDetailsService implements UserDetailsService {
@@ -40,3 +41,6 @@ public class CombinedUserDetailsService implements UserDetailsService {
         return clientSvc.loadUserByUsername(username);
     }
 }
+
+
+ */

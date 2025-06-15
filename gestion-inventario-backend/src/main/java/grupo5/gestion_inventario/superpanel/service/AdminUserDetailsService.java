@@ -1,4 +1,5 @@
 // src/main/java/grupo5/gestion_inventario/superpanel/service/AdminUserDetailsService.java
+
 package grupo5.gestion_inventario.superpanel.service;
 
 import grupo5.gestion_inventario.superpanel.model.AdminUser;
